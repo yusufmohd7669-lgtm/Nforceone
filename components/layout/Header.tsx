@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation";
 import { services } from "@/content/services";
 import { Button } from "../ui/Button";
 import { Logo } from "../ui/Logo";
+import { gsap } from "@/lib/animations/gsap";
 import {
   ChevronDown,
   Menu,
   X,
-  Layers,
   ArrowUpRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -20,13 +20,43 @@ export function Header() {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
 
   useEffect(() => {
+    let lastScrollY = window.scrollY;
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      const scrolled = currentScrollY > 60;
+      setIsScrolled(scrolled);
+
+      if (headerRef.current) {
+        if (scrolled) {
+          gsap.to(headerRef.current, {
+            backgroundColor: "rgba(5, 5, 5, 0.95)",
+            paddingTop: "0.75rem",
+            paddingBottom: "0.75rem",
+            borderBottomColor: "#1e1e24",
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        } else {
+          gsap.to(headerRef.current, {
+            backgroundColor: "transparent",
+            paddingTop: "1.25rem",
+            paddingBottom: "1.25rem",
+            borderBottomColor: "transparent",
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        }
+      }
+
+      lastScrollY = currentScrollY;
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -59,15 +89,14 @@ export function Header() {
 
   return (
     <header
+      ref={headerRef}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled
-          ? "bg-bg/95 backdrop-blur-md border-b border-border py-3 shadow-xl shadow-black/80"
-          : "bg-transparent py-4"
+        "fixed top-0 left-0 right-0 z-50 transition-all border-b border-transparent py-5 backdrop-blur-md",
+        isScrolled && "shadow-2xl shadow-black/90"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand Logo with exact SVG */}
+        {/* Brand Logo */}
         <Link href="/" className="flex items-center group py-1">
           <Logo size="md" />
         </Link>
@@ -121,7 +150,7 @@ export function Header() {
                 {/* Mid & Right Cols: All 12 Services */}
                 <div className="col-span-2 grid grid-cols-2 gap-3">
                   <div className="col-span-2 flex items-center justify-between pb-2 border-b border-border">
-                    <span className="text-[10px] font-mono uppercase text-text-muted tracking-wider">
+                    <span className="text-[10px] font-mono uppercase text-text-muted tracking-wider font-bold">
                       All Core Capabilities (12 Services)
                     </span>
                     <Link

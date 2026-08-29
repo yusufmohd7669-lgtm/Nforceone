@@ -4,6 +4,8 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { Preloader } from "@/components/ui/Preloader";
+import { CustomCursor } from "@/components/ui/CustomCursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -26,7 +28,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#14140f",
+  themeColor: "#050505",
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
@@ -86,7 +88,7 @@ export default function RootLayout({
     name: "NForce One",
     url: "https://nforce.one",
     logo: "https://nforce.one/logo.png",
-    slogan: "N1 — Let's Do IT!",
+    slogan: "NF1 — Let's Do IT!",
     description:
       "Enterprise B2B IT consultancy specializing in Pega platform architecture, QA test engineering, big data infrastructure, and custom software.",
     contactPoint: {
@@ -115,11 +117,17 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="bg-bg text-text antialiased selection:bg-accent selection:text-accent-text min-h-screen flex flex-col font-sans">
-        {/* Accessible Skip to Content Link */}
+      <body className="bg-bg text-text antialiased selection:bg-accent selection:text-white min-h-screen flex flex-col font-sans overflow-x-hidden">
+        {/* Terminal Boot Sequence (Runs once per session) */}
+        <Preloader />
+
+        {/* HUD Reticle Cursor */}
+        <CustomCursor />
+
+        {/* Accessible Skip Link */}
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-accent-text focus:font-mono focus:rounded focus:shadow-lg"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:font-mono focus:rounded focus:shadow-lg"
         >
           Skip to main content
         </a>

@@ -13,6 +13,8 @@ import { ServicesTable } from "@/components/ui/ServicesTable";
 import { CaseStudyCard } from "@/components/cards/CaseStudyCard";
 import { InsightCard } from "@/components/cards/InsightCard";
 import { HeroGlow } from "@/components/ui/HeroGlow";
+import { HeroHeadline } from "@/components/hero/HeroHeadline";
+import { Reveal } from "@/components/ui/Reveal";
 import {
   Layers,
   ShieldCheck,
@@ -84,19 +86,14 @@ export default function HomePage() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-4xl">
-            {/* Eyebrow badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/15 border border-accent/40 text-accent font-mono text-xs uppercase tracking-wider mb-6 font-bold">
+            {/* Eyebrow badge with pulse dot */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/15 border border-accent/40 text-accent font-mono text-xs uppercase tracking-wider mb-6 font-bold shadow-sm shadow-accent/10">
               <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               <span>[SYS.SPEC] Enterprise IT Architecture & Pega Specialization</span>
             </div>
 
-            {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold font-display tracking-tight text-white leading-[1.08] mb-6">
-              Turn Complex IT Systems into{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-red-500 to-accent drop-shadow-[0_0_30px_rgba(229,9,20,0.4)]">
-                Competitive Advantages.
-              </span>
-            </h1>
+            {/* Precision 3-Line Masked Headline Reveal */}
+            <HeroHeadline />
 
             {/* Tightened, Punchy Subhead */}
             <p className="text-lg md:text-xl text-text-muted leading-relaxed max-w-3xl mb-10 font-sans">
@@ -104,15 +101,15 @@ export default function HomePage() {
               scalable cloud data platforms, automated QA testing, and resilient custom software for enterprise leaders.
             </p>
 
-            {/* CTAs */}
+            {/* CTAs with Magnetic Hover Physics */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-16">
-              <Button href="/contact" size="lg" variant="primary" icon>
+              <Button href="/contact" size="lg" variant="primary" icon magnetic>
                 Book a Consultation
               </Button>
-              <Button href="/pega" size="lg" variant="secondary">
+              <Button href="/pega" size="lg" variant="secondary" magnetic>
                 Pega Specialization Hub
               </Button>
-              <Button href="/services" size="lg" variant="outline">
+              <Button href="/services" size="lg" variant="outline" magnetic>
                 Browse 12 Services
               </Button>
             </div>
@@ -173,7 +170,7 @@ export default function HomePage() {
         <Marquee items={marqueeItems} speed={35} />
       </section>
 
-      {/* 3. VALUE PILLARS (WHY US) */}
+      {/* 3. VALUE PILLARS (WHY US) WITH REVEAL */}
       <section className="py-20 md:py-24 border-b border-border bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
@@ -182,95 +179,99 @@ export default function HomePage() {
             subtitle="We take full architectural ownership to build systems that scale cleanly, pass strict compliance audits, and eliminate technical debt."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {valuePillars.map((pillar, idx) => (
-              <div
-                key={idx}
-                className="relative p-6 md:p-7 rounded-xl bg-bg-card border border-border hover:border-accent/60 transition-all duration-300 flex flex-col justify-between group"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent group-hover:border-accent/40 transition-colors">
-                      <pillar.icon className="w-5 h-5" />
+          <Reveal stagger={0.1}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {valuePillars.map((pillar, idx) => (
+                <div
+                  key={idx}
+                  className="relative p-6 md:p-7 rounded-xl bg-bg-card border border-border hover:border-accent/60 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 shadow-lg hover:shadow-black/60"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent group-hover:border-accent/40 transition-colors">
+                        <pillar.icon className="w-5 h-5" />
+                      </div>
+                      <span className="font-mono text-[10px] text-text-muted/60 group-hover:text-accent font-semibold">
+                        {pillar.code}
+                      </span>
                     </div>
-                    <span className="font-mono text-[10px] text-text-muted/60 group-hover:text-accent font-semibold">
-                      {pillar.code}
-                    </span>
+                    <h3 className="text-lg font-bold font-display text-white mb-2.5">
+                      {pillar.title}
+                    </h3>
+                    <p className="text-xs md:text-sm text-text-muted leading-relaxed">
+                      {pillar.description}
+                    </p>
                   </div>
-                  <h3 className="text-lg font-bold font-display text-white mb-2.5">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-xs md:text-sm text-text-muted leading-relaxed">
-                    {pillar.description}
-                  </p>
+                  <div className="mt-5 pt-3 border-t border-border/60 text-[10px] font-mono uppercase text-accent font-semibold">
+                    Standard Directive 0{idx + 1}
+                  </div>
                 </div>
-                <div className="mt-5 pt-3 border-t border-border/60 text-[10px] font-mono uppercase text-accent font-semibold">
-                  Standard Directive 0{idx + 1}
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* 4. CONSOLIDATED FLAGSHIP PEGA PRACTICE */}
       <section className="py-16 md:py-20 border-b border-border bg-gradient-to-r from-bg-raised via-bg-card to-bg-raised relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-8 space-y-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="accent">FLAGSHIP SPECIALIZATION</Badge>
-                {/* Folded Quality Fact directly as a prominent badge */}
-                <span className="text-[11px] font-mono uppercase px-3 py-1 rounded-full bg-accent/20 text-white border border-accent/40 font-bold flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-accent" />
-                  Mandated Guardrail Score: ≥90 / 100
+          <Reveal>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+              <div className="lg:col-span-8 space-y-5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="accent">FLAGSHIP SPECIALIZATION</Badge>
+                  {/* Folded Quality Fact directly as a prominent badge */}
+                  <span className="text-[11px] font-mono uppercase px-3 py-1 rounded-full bg-accent/20 text-white border border-accent/40 font-bold flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-accent" />
+                    Mandated Guardrail Score: ≥90 / 100
+                  </span>
+                </div>
+
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display text-white leading-tight">
+                  Enterprise Pega Architecture & Case Modernization
+                </h2>
+
+                <p className="text-sm md:text-base text-text-muted leading-relaxed max-w-3xl">
+                  Led by certified Pega Lead System Architects (CLSA), our practice specializes in Pega Infinity modernization, Customer Decision Hub (CDH), and automated Scenario Testing. We enforce clean Situational Layer Cake separation so local rule sets never pollute core enterprise assets.
+                </p>
+
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <Button href="/pega" size="md" variant="primary" icon magnetic>
+                    Explore Pega Flagship Hub
+                  </Button>
+                  <Button href="/services/pega-development" size="md" variant="outline" magnetic>
+                    Pega Development Specs
+                  </Button>
+                  <Button href="/services/pega-testing" size="md" variant="outline" magnetic>
+                    Pega QA Testing
+                  </Button>
+                </div>
+              </div>
+
+              <div className="lg:col-span-4 p-6 rounded-xl bg-bg border border-border space-y-3 border-l-4 border-l-accent shadow-2xl">
+                <span className="text-[11px] font-mono uppercase text-accent font-bold block">
+                  [SYS.ARCH.PEGA]
                 </span>
-              </div>
-
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold font-display text-white leading-tight">
-                Enterprise Pega Architecture & Case Modernization
-              </h2>
-
-              <p className="text-sm md:text-base text-text-muted leading-relaxed max-w-3xl">
-                Led by certified Pega Lead System Architects (CLSA), our practice specializes in Pega Infinity modernization, Customer Decision Hub (CDH), and automated Scenario Testing. We enforce clean Situational Layer Cake separation so local rule sets never pollute core enterprise assets.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Button href="/pega" size="md" variant="primary" icon>
-                  Explore Pega Flagship Hub
-                </Button>
-                <Button href="/services/pega-development" size="md" variant="outline">
-                  Pega Development Specs
-                </Button>
-                <Button href="/services/pega-testing" size="md" variant="outline">
-                  Pega QA Testing
-                </Button>
+                <h3 className="text-base font-bold font-display text-white">
+                  Zero Technical Debt Architecture
+                </h3>
+                <ul className="space-y-2 text-xs font-mono text-text-muted">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span>Situational Layer Cake Enforcement</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span>Deployment Manager CI/CD Quality Gates</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span>Zero-Downtime Pega Cloud Cutover</span>
+                  </li>
+                </ul>
               </div>
             </div>
-
-            <div className="lg:col-span-4 p-6 rounded-xl bg-bg border border-border space-y-3 border-l-4 border-l-accent">
-              <span className="text-[11px] font-mono uppercase text-accent font-bold block">
-                [SYS.ARCH.PEGA]
-              </span>
-              <h3 className="text-base font-bold font-display text-white">
-                Zero Technical Debt Architecture
-              </h3>
-              <ul className="space-y-2 text-xs font-mono text-text-muted">
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                  <span>Situational Layer Cake Enforcement</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                  <span>Deployment Manager CI/CD Quality Gates</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                  <span>Zero-Downtime Pega Cloud Cutover</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -284,13 +285,15 @@ export default function HomePage() {
               subtitle="Indexed technical disciplines backed by dedicated practice leads and measurable SLAs."
               className="mb-0 max-w-2xl"
             />
-            <Button href="/services" variant="outline" size="sm" icon>
+            <Button href="/services" variant="outline" size="sm" icon magnetic>
               Full Directory View
             </Button>
           </div>
 
-          {/* Scannable Indexed Technical Table */}
-          <ServicesTable />
+          {/* Scannable Indexed Technical Table with Reveal */}
+          <Reveal>
+            <ServicesTable />
+          </Reveal>
         </div>
       </section>
 
@@ -304,16 +307,18 @@ export default function HomePage() {
               subtitle="Measurable ROI and performance outcomes delivered across regulated industries."
               className="mb-0 max-w-2xl"
             />
-            <Button href="/case-studies" variant="outline" size="sm" icon>
+            <Button href="/case-studies" variant="outline" size="sm" icon magnetic>
               View All Studies
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {caseStudies.slice(0, 3).map((study) => (
-              <CaseStudyCard key={study.slug} caseStudy={study} />
-            ))}
-          </div>
+          <Reveal stagger={0.12}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {caseStudies.slice(0, 3).map((study) => (
+                <CaseStudyCard key={study.slug} caseStudy={study} />
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -326,32 +331,34 @@ export default function HomePage() {
             subtitle="Deep domain architecture meeting strict compliance, high concurrency, and high-volume transaction requirements."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {industries.map((ind) => (
-              <Link
-                key={ind.slug}
-                href={`/industries/${ind.slug}`}
-                className="group p-6 rounded-xl bg-bg-card border border-border hover:border-accent/60 hover:bg-bg-raised transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent mb-4 group-hover:border-accent/40 transition-colors">
-                    <Building2 className="w-5 h-5" />
+          <Reveal stagger={0.08}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {industries.map((ind) => (
+                <Link
+                  key={ind.slug}
+                  href={`/industries/${ind.slug}`}
+                  className="group p-6 rounded-xl bg-bg-card border border-border hover:border-accent/60 hover:bg-bg-raised transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 shadow-lg hover:shadow-black/60"
+                >
+                  <div>
+                    <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent mb-4 group-hover:border-accent/40 transition-colors">
+                      <Building2 className="w-5 h-5" />
+                    </div>
+                    <h3 className="text-lg font-bold font-display text-white group-hover:text-accent transition-colors">
+                      {ind.name}
+                    </h3>
+                    <p className="text-xs text-text-muted mt-2 leading-relaxed line-clamp-3">
+                      {ind.description}
+                    </p>
                   </div>
-                  <h3 className="text-lg font-bold font-display text-white group-hover:text-accent transition-colors">
-                    {ind.name}
-                  </h3>
-                  <p className="text-xs text-text-muted mt-2 leading-relaxed line-clamp-3">
-                    {ind.description}
-                  </p>
-                </div>
 
-                <div className="mt-5 pt-3 border-t border-border flex items-center justify-between text-xs font-mono text-accent font-semibold">
-                  <span>Explore Vertical</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </div>
-              </Link>
-            ))}
-          </div>
+                  <div className="mt-5 pt-3 border-t border-border flex items-center justify-between text-xs font-mono text-accent font-semibold">
+                    <span>Explore Vertical</span>
+                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -365,39 +372,43 @@ export default function HomePage() {
               subtitle="Practical articles authored by our principal architects on enterprise modernization."
               className="mb-0 max-w-2xl"
             />
-            <Button href="/insights" variant="outline" size="sm" icon>
+            <Button href="/insights" variant="outline" size="sm" icon magnetic>
               All Articles
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {insights.slice(0, 3).map((insight) => (
-              <InsightCard key={insight.slug} insight={insight} />
-            ))}
-          </div>
+          <Reveal stagger={0.1}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {insights.slice(0, 3).map((insight) => (
+                <InsightCard key={insight.slug} insight={insight} />
+              ))}
+            </div>
+          </Reveal>
         </div>
       </section>
 
       {/* 9. GLOBAL CTA BANNER */}
       <section className="py-20 md:py-24 bg-gradient-to-b from-bg to-bg-raised relative overflow-hidden">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <Badge variant="accent" className="mx-auto mb-6">
-            [SYS.INIT] LET&apos;S COLLABORATE
-          </Badge>
-          <h2 className="text-3xl md:text-5xl font-extrabold font-display tracking-tight text-white leading-tight mb-5">
-            Ready to Build Next-Generation Enterprise Systems?
-          </h2>
-          <p className="text-sm md:text-lg text-text-muted max-w-2xl mx-auto mb-8 leading-relaxed">
-            Schedule a technical consultation with an NForce One practice lead to review your system architecture, project timelines, and delivery roadmap.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button href="/contact" size="lg" variant="primary" icon>
-              Book a Consultation
-            </Button>
-            <Button href="/pega" size="lg" variant="secondary">
-              View Pega Hub
-            </Button>
-          </div>
+          <Reveal>
+            <Badge variant="accent" className="mx-auto mb-6">
+              [SYS.INIT] LET&apos;S COLLABORATE
+            </Badge>
+            <h2 className="text-3xl md:text-5xl font-extrabold font-display tracking-tight text-white leading-tight mb-5">
+              Ready to Build Next-Generation Enterprise Systems?
+            </h2>
+            <p className="text-sm md:text-lg text-text-muted max-w-2xl mx-auto mb-8 leading-relaxed">
+              Schedule a technical consultation with an NForce One practice lead to review your system architecture, project timelines, and delivery roadmap.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button href="/contact" size="lg" variant="primary" icon magnetic>
+                Book a Consultation
+              </Button>
+              <Button href="/pega" size="lg" variant="secondary" magnetic>
+                View Pega Hub
+              </Button>
+            </div>
+          </Reveal>
         </div>
       </section>
     </div>

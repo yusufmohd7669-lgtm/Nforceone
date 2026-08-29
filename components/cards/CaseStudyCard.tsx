@@ -1,8 +1,12 @@
-import React from "react";
+"use client";
+
+import React, { useRef } from "react";
 import Link from "next/link";
 import { CaseStudy } from "@/lib/schema";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { use3DTilt } from "@/lib/animations/hooks";
+import { Counter } from "../ui/Counter";
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy;
@@ -10,26 +14,30 @@ interface CaseStudyCardProps {
 }
 
 export function CaseStudyCard({ caseStudy, className }: CaseStudyCardProps) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
+  use3DTilt(cardRef, 4);
+
   return (
     <Link
+      ref={cardRef}
       href={`/case-studies/${caseStudy.slug}`}
       className={cn(
-        "group relative flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border transition-all duration-300 hover:border-accent/60 hover:bg-bg-raised hover:-translate-y-1 hover:shadow-xl hover:shadow-black/40",
+        "group relative flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border transition-all duration-300 hover:border-accent/60 hover:bg-bg-raised hover:-translate-y-1 shadow-xl hover:shadow-black/60",
         className
       )}
     >
       <div>
         {/* Header tags */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-          <span className="text-xs font-mono uppercase tracking-wider text-accent">
-            {caseStudy.industry}
+          <span className="text-xs font-mono uppercase tracking-wider text-accent font-bold">
+            [{caseStudy.industry}]
           </span>
           <span className="text-xs font-mono text-text-muted">
             {caseStudy.serviceCategory}
           </span>
         </div>
 
-        <h3 className="text-xl md:text-2xl font-bold font-display text-text group-hover:text-accent transition-colors leading-snug">
+        <h3 className="text-xl md:text-2xl font-bold font-display text-white group-hover:text-accent transition-colors leading-snug">
           {caseStudy.title}
         </h3>
 
@@ -37,8 +45,8 @@ export function CaseStudyCard({ caseStudy, className }: CaseStudyCardProps) {
           {caseStudy.summary}
         </p>
 
-        {/* Metrics Bar */}
-        <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-border bg-bg/40 p-4 rounded-lg">
+        {/* Metrics Bar with Count-up */}
+        <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-border bg-bg/50 p-4 rounded-lg">
           {caseStudy.metrics.slice(0, 2).map((m, idx) => (
             <div key={idx} className="flex flex-col">
               <span className="text-2xl md:text-3xl font-bold font-display text-accent">
@@ -52,9 +60,9 @@ export function CaseStudyCard({ caseStudy, className }: CaseStudyCardProps) {
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-between text-xs font-mono tracking-wider text-text-muted uppercase group-hover:text-accent transition-colors">
-        <span>Read Case Study</span>
-        <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent group-hover:text-accent-text transition-all duration-300">
+      <div className="mt-6 flex items-center justify-between text-xs font-mono tracking-wider text-text-muted uppercase group-hover:text-accent transition-colors font-semibold">
+        <span>Read Full Spec & Results</span>
+        <div className="w-8 h-8 rounded-full border border-border flex items-center justify-center group-hover:border-accent group-hover:bg-accent group-hover:text-white transition-all duration-300">
           <ArrowUpRight className="w-4 h-4" />
         </div>
       </div>

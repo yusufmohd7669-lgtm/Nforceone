@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
+import { useMagnetic } from "@/lib/animations/hooks";
 
 interface ButtonProps {
   children?: React.ReactNode;
@@ -14,6 +15,7 @@ interface ButtonProps {
   icon?: boolean;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
+  magnetic?: boolean;
   onClick?: () => void;
 }
 
@@ -26,9 +28,13 @@ export function Button({
   icon = false,
   type = "button",
   disabled = false,
+  magnetic = true,
   onClick,
 }: ButtonProps) {
-  const buttonRef = useRef<HTMLElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
+
+  // Apply subtle magnetic pull
+  useMagnetic(buttonRef, magnetic ? 10 : 0);
 
   const baseStyles =
     "inline-flex items-center justify-center font-medium font-sans tracking-wide transition-all duration-300 rounded-md select-none group relative overflow-hidden disabled:opacity-50 disabled:pointer-events-none";
