@@ -3,303 +3,276 @@
 import React, { useState } from "react";
 import { ContactFormSchema, ContactFormData } from "@/lib/schema";
 import { services } from "@/content/services";
+import { Button } from "../ui/Button";
 import { CheckCircle2, AlertCircle, Loader2, Send } from "lucide-react";
 
-interface ContactFormProps {
-  initialService?: string;
-  className?: string;
-}
-
-export function ContactForm({ initialService = "", className }: ContactFormProps) {
+export function ContactForm() {
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     company: "",
-    phone: "",
-    service: initialService,
+    service: "Pega Development & Implementation",
     message: "",
+    phone: "",
     website: "", // honeypot
   });
 
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
+  const [serverState, setServerState] = useState<{
+    status: "idle" | "submitting" | "success" | "error";
+    message?: string;
+  }>({ status: "idle" });
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error for field on change
-    if (errors[name]) {
-      setErrors((prev) => {
-        const next = { ...prev };
-        delete next[name];
-        return next;
-      });
+    if (errors[name as keyof ContactFormData]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrors({});
-    setStatus("submitting");
 
-    // Client-side Zod validation
+    // Validate with Zod
     const result = ContactFormSchema.safeParse(formData);
     if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
+      const fieldErrors: Partial<Record<keyof ContactFormData, string>> = {};
       result.error.issues.forEach((issue) => {
-        if (issue.path[0]) {
-          fieldErrors[issue.path[0].toString()] = issue.message;
-        }
+        const path = issue.path[0] as keyof ContactFormData;
+        if (path) fieldErrors[path] = issue.message;
       });
       setErrors(fieldErrors);
-      setStatus("idle");
       return;
     }
 
+    setServerState({ status: "submitting" });
+
     try {
-      const res = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (!res.ok || !data.success) {
-        throw new Error(data.message || "Failed to submit request. Please try again.");
+      if (response.ok && data.success) {
+        setServerState({
+          status: "success",
+          message: "Transmission received. A practice lead will contact you within 1 business day.",
+        });
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          service: "Pega Development & Implementation",
+          message: "",
+          phone: "",
+          website: "",
+        });
+      } else {
+        setServerState({
+          status: "error",
+          message: data.error || "Failed to submit. Please try again or email us directly.",
+        });
       }
-
-      setStatus("success");
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        phone: "",
-        service: "",
-        message: "",
-        website: "",
+    } catch (err) {
+      setServerState({
+        status: "error",
+        message: "Network error. Please try again or email contact@nforce.one.",
       });
-    } catch (err: unknown) {
-      setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "An unexpected error occurred.");
     }
   };
 
-  if (status === "success") {
+  if (serverState.status === "success") {
     return (
-      <div className="p-8 md:p-12 rounded-2xl bg-bg-raised border border-accent/40 text-center flex flex-col items-center justify-center">
-        <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-accent mb-6">
-          <CheckCircle2 className="w-8 h-8" />
+      <div className="p-8 md:p-12 rounded-2xl bg-bg-card border border-accent/60 text-center space-y-4 animate-in fade-in duration-200">
+        <div className="w-12 h-12 rounded-full bg-accent/15 border border-accent flex items-center justify-center text-accent mx-auto">
+          <CheckCircle2 className="w-6 h-6" />
         </div>
-        <h3 className="text-2xl font-bold font-display text-text">Thank You for Reaching Out</h3>
-        <p className="text-text-muted mt-3 max-w-md">
-          Your project details have been received. An NForce One practice lead will review your requirements and follow up within one business day.
+        <span className="text-xs font-mono uppercase text-accent font-bold block">
+          [TRANSMISSION CONFIRMED]
+        </span>
+        <h3 className="text-2xl font-bold font-display text-white">
+          Message Received Successfully
+        </h3>
+        <p className="text-sm text-text-muted max-w-md mx-auto leading-relaxed">
+          {serverState.message}
         </p>
-        <button
-          type="button"
-          onClick={() => setStatus("idle")}
-          className="mt-8 text-xs font-mono uppercase tracking-wider text-accent border border-accent/30 hover:bg-accent/10 px-5 py-2.5 rounded-md transition-colors"
-        >
-          Send Another Message
-        </button>
+        <div className="pt-4">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => setServerState({ status: "idle" })}
+          >
+            Send Another Transmission
+          </Button>
+        </div>
       </div>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className={className}>
-      {status === "error" && (
-        <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center gap-3 text-red-400 text-sm">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <span>{errorMessage}</span>
-        </div>
-      )}
+    <form
+      onSubmit={handleSubmit}
+      className="p-8 md:p-10 rounded-2xl bg-bg-card border border-border shadow-2xl space-y-6"
+    >
+      {/* Honeypot for spam bot mitigation */}
+      <input
+        type="text"
+        name="website"
+        value={formData.website || ""}
+        onChange={handleChange}
+        tabIndex={-1}
+        autoComplete="off"
+        className="sr-only"
+        aria-hidden="true"
+      />
 
-      {/* Honeypot field (hidden from legitimate users) */}
-      <div className="hidden" aria-hidden="true">
-        <label htmlFor="website">Leave blank</label>
-        <input
-          type="text"
-          id="website"
-          name="website"
-          value={formData.website}
-          onChange={handleChange}
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Full Name */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Name */}
         <div>
-          <label htmlFor="name" className="block text-xs font-mono uppercase tracking-wider text-text mb-2">
-            Your Name <span className="text-accent">*</span>
+          <label htmlFor="name" className="block text-xs font-mono uppercase text-text-muted mb-2 font-bold">
+            Full Name *
           </label>
           <input
-            type="text"
             id="name"
             name="name"
-            required
+            type="text"
             value={formData.name}
             onChange={handleChange}
-            placeholder="Jane Doe"
-            aria-invalid={!!errors.name}
-            aria-describedby={errors.name ? "name-error" : undefined}
-            className="w-full bg-bg-card border border-border focus:border-accent rounded-lg px-4 py-3 text-text placeholder:text-text-muted/40 focus:outline-none transition-colors"
+            placeholder="Sarah Jenkins"
+            className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none transition-colors"
           />
           {errors.name && (
-            <p id="name-error" className="text-xs text-red-400 mt-1.5 font-mono">
-              {errors.name}
-            </p>
+            <p className="text-xs font-mono text-accent mt-1.5">{errors.name}</p>
           )}
         </div>
 
         {/* Work Email */}
         <div>
-          <label htmlFor="email" className="block text-xs font-mono uppercase tracking-wider text-text mb-2">
-            Business Email <span className="text-accent">*</span>
+          <label htmlFor="email" className="block text-xs font-mono uppercase text-text-muted mb-2 font-bold">
+            Work Email *
           </label>
           <input
-            type="email"
             id="email"
             name="email"
-            required
+            type="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="jane@company.com"
-            aria-invalid={!!errors.email}
-            aria-describedby={errors.email ? "email-error" : undefined}
-            className="w-full bg-bg-card border border-border focus:border-accent rounded-lg px-4 py-3 text-text placeholder:text-text-muted/40 focus:outline-none transition-colors"
+            placeholder="sarah@enterprise.com"
+            className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none transition-colors"
           />
           {errors.email && (
-            <p id="email-error" className="text-xs text-red-400 mt-1.5 font-mono">
-              {errors.email}
-            </p>
+            <p className="text-xs font-mono text-accent mt-1.5">{errors.email}</p>
           )}
         </div>
+      </div>
 
-        {/* Company Name */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Company */}
         <div>
-          <label htmlFor="company" className="block text-xs font-mono uppercase tracking-wider text-text mb-2">
-            Company / Organization <span className="text-accent">*</span>
+          <label htmlFor="company" className="block text-xs font-mono uppercase text-text-muted mb-2 font-bold">
+            Company Name *
           </label>
           <input
-            type="text"
             id="company"
             name="company"
-            required
+            type="text"
             value={formData.company}
             onChange={handleChange}
-            placeholder="Acme Financial Corp."
-            aria-invalid={!!errors.company}
-            aria-describedby={errors.company ? "company-error" : undefined}
-            className="w-full bg-bg-card border border-border focus:border-accent rounded-lg px-4 py-3 text-text placeholder:text-text-muted/40 focus:outline-none transition-colors"
+            placeholder="Acme Financial Corp"
+            className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none transition-colors"
           />
           {errors.company && (
-            <p id="company-error" className="text-xs text-red-400 mt-1.5 font-mono">
-              {errors.company}
-            </p>
+            <p className="text-xs font-mono text-accent mt-1.5">{errors.company}</p>
           )}
         </div>
 
-        {/* Phone (Optional) */}
+        {/* Service of Interest */}
         <div>
-          <label htmlFor="phone" className="block text-xs font-mono uppercase tracking-wider text-text mb-2">
-            Phone Number <span className="text-text-muted/60 lowercase">(optional)</span>
+          <label htmlFor="service" className="block text-xs font-mono uppercase text-text-muted mb-2 font-bold">
+            Service of Interest *
           </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
+          <select
+            id="service"
+            name="service"
+            value={formData.service}
             onChange={handleChange}
-            placeholder="+1 (555) 000-0000"
-            className="w-full bg-bg-card border border-border focus:border-accent rounded-lg px-4 py-3 text-text placeholder:text-text-muted/40 focus:outline-none transition-colors"
-          />
+            className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none transition-colors"
+          >
+            <option value="Pega Development & Implementation">Pega Development & Implementation</option>
+            <option value="Pega Testing & Quality Engineering">Pega Testing & Quality Engineering</option>
+            <option value="QA Testing & Automation">QA Testing & Automation</option>
+            <option value="Data Analytics & Business Intelligence">Data Analytics & Business Intelligence</option>
+            <option value="Big Data & Data Engineering">Big Data & Data Engineering</option>
+            <option value="Database Management & Modernization">Database Management & Modernization</option>
+            <option value="Cloud Infrastructure & DevOps">Cloud Infrastructure & DevOps</option>
+            <option value="Web & Application Development">Web & Application Development</option>
+            <option value="IT Management & PMO Consulting">IT Management & PMO Consulting</option>
+            <option value="UI/UX & Design Systems">UI/UX & Design Systems</option>
+            <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+            <option value="Staff Augmentation & Dedicated Teams">Staff Augmentation & Dedicated Teams</option>
+            <option value="General Architecture Consultation">General Architecture Consultation</option>
+          </select>
         </div>
       </div>
 
-      {/* Service of Interest */}
-      <div className="mb-6">
-        <label htmlFor="service" className="block text-xs font-mono uppercase tracking-wider text-text mb-2">
-          Service of Interest <span className="text-accent">*</span>
-        </label>
-        <select
-          id="service"
-          name="service"
-          required
-          value={formData.service}
-          onChange={handleChange}
-          aria-invalid={!!errors.service}
-          aria-describedby={errors.service ? "service-error" : undefined}
-          className="w-full bg-bg-card border border-border focus:border-accent rounded-lg px-4 py-3 text-text focus:outline-none transition-colors"
-        >
-          <option value="" disabled>Select a core capability or practice</option>
-          <option value="pega-flagship">Flagship Pega Implementation / CDH</option>
-          {services.map((svc) => (
-            <option key={svc.slug} value={svc.slug}>
-              {svc.title}
-            </option>
-          ))}
-          <option value="general-consultation">General IT Strategy & Architecture</option>
-        </select>
-        {errors.service && (
-          <p id="service-error" className="text-xs text-red-400 mt-1.5 font-mono">
-            {errors.service}
-          </p>
-        )}
-      </div>
-
-      {/* Message */}
-      <div className="mb-8">
-        <label htmlFor="message" className="block text-xs font-mono uppercase tracking-wider text-text mb-2">
-          Project Overview & Objectives <span className="text-accent">*</span>
+      {/* Project Message */}
+      <div>
+        <label htmlFor="message" className="block text-xs font-mono uppercase text-text-muted mb-2 font-bold">
+          Project Brief / Scope Details *
         </label>
         <textarea
           id="message"
           name="message"
-          required
-          rows={5}
+          rows={4}
           value={formData.message}
           onChange={handleChange}
-          placeholder="Describe your current tech landscape, target delivery milestones, and specific areas where NForce One can help..."
-          aria-invalid={!!errors.message}
-          aria-describedby={errors.message ? "message-error" : undefined}
-          className="w-full bg-bg-card border border-border focus:border-accent rounded-lg px-4 py-3 text-text placeholder:text-text-muted/40 focus:outline-none transition-colors resize-y"
+          placeholder="Describe your current technical challenge, timeline goals, or architecture requirements..."
+          className="w-full px-4 py-3 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none transition-colors"
         />
         {errors.message && (
-          <p id="message-error" className="text-xs text-red-400 mt-1.5 font-mono">
-            {errors.message}
-          </p>
+          <p className="text-xs font-mono text-accent mt-1.5">{errors.message}</p>
         )}
       </div>
 
-      {/* Submit button */}
-      <button
-        type="submit"
-        disabled={status === "submitting"}
-        className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-accent hover:bg-accent-hover text-accent-text font-semibold px-8 py-4 rounded-lg transition-all shadow-lg shadow-accent/10 hover:shadow-accent/20 active:scale-[0.98] disabled:opacity-50"
-      >
-        {status === "submitting" ? (
-          <>
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span>Transmitting Request...</span>
-          </>
-        ) : (
-          <>
-            <span>Submit Consultation Request</span>
-            <Send className="w-4 h-4" />
-          </>
-        )}
-      </button>
+      {serverState.status === "error" && (
+        <div className="p-3.5 rounded-lg bg-accent/15 border border-accent text-accent text-xs font-mono flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0" />
+          <span>{serverState.message}</span>
+        </div>
+      )}
 
-      {/* Fallback info */}
-      <div className="mt-6 pt-6 border-t border-border flex flex-wrap items-center justify-between text-xs font-mono text-text-muted gap-4">
-        <span>Direct Email: <a href="mailto:contact@nforce.one" className="text-text hover:text-accent underline">contact@nforce.one</a></span>
-        <span>Direct Phone: <a href="tel:+19724996667" className="text-text hover:text-accent">+1 (972) 499-6667</a></span>
+      {/* Transmitting submit button with magnetic pull */}
+      <div>
+        <button
+          type="submit"
+          disabled={serverState.status === "submitting"}
+          data-magnetic
+          className="w-full inline-flex items-center justify-center font-bold tracking-wide transition-all duration-200 rounded-md select-none group relative overflow-hidden text-base px-7 py-3.5 gap-2.5 bg-accent text-white hover:bg-accent-hover active:scale-[0.98] shadow-lg shadow-accent/25 border border-accent/40 disabled:opacity-60"
+        >
+          {serverState.status === "submitting" ? (
+            <span className="btn-text inline-flex items-center gap-2 font-mono">
+              <Loader2 className="w-4 h-4 animate-spin text-white" />
+              <span>TRANSMITTING DOSSIER...</span>
+            </span>
+          ) : (
+            <span className="btn-text inline-flex items-center gap-2">
+              <span>Transmit Consultation Request</span>
+              <Send className="w-4 h-4" />
+            </span>
+          )}
+        </button>
+      </div>
+
+      <div className="pt-2 border-t border-border flex items-center justify-between text-[11px] font-mono text-text-muted">
+        <span>[SYS.ENC.256-BIT] Protected transmission</span>
+        <span>Guaranteed NDA Confidentiality</span>
       </div>
     </form>
   );

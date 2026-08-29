@@ -6,89 +6,91 @@ import { CaseStudyCard } from "@/components/cards/CaseStudyCard";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { HeroReveal } from "@/components/ui/HeroReveal";
 
 export default function CaseStudiesPage() {
   const [selectedIndustry, setSelectedIndustry] = useState<string>("All");
 
-  const industriesList = [
+  const industries = [
     "All",
-    "Insurance",
-    "Banking & Financial Services",
-    "Healthcare & Life Sciences",
-    "Retail & eCommerce",
+    ...Array.from(new Set(caseStudies.map((cs) => cs.industry))),
   ];
 
-  const filteredStudies =
+  const filteredCaseStudies =
     selectedIndustry === "All"
       ? caseStudies
       : caseStudies.filter((cs) => cs.industry === selectedIndustry);
 
   return (
-    <div className="relative overflow-hidden">
-      {/* 1. HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised/40 via-bg to-bg">
-        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+    <div className="relative overflow-hidden bg-bg text-text">
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised via-bg to-bg">
+        <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl">
-            <Badge variant="accent" className="mb-6">
-              PROVEN RESULTS & ARCHITECTURE
-            </Badge>
+          <div className="max-w-4xl">
+            <HeroReveal
+              eyebrow="ENTERPRISE CASE STUDIES"
+              lines={[
+                "Proven Outcomes & Architectural",
+                "Case Notes Across",
+                "Regulated Domains.",
+              ]}
+              accentWord="Regulated Domains."
+              accentLineIndex={2}
+            />
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-text leading-tight mb-6">
-              Enterprise Case Studies & Quantified Outcomes.
-            </h1>
-
-            <p className="text-lg md:text-xl text-text-muted leading-relaxed mb-8">
-              Explore how NForce One solves mission-critical technology challenges — from flagship Pega modernizations and automated QA pipelines to petabyte-scale data platforms.
+            <p className="text-lg md:text-xl text-text-muted leading-relaxed max-w-3xl mb-8">
+              Explore how we have engineered scalable Pega workflows, high-throughput cloud lakehouses, automated test suites, and resilient cloud architectures for leading global enterprises.
             </p>
 
-            <Button href="/contact" size="md" variant="primary" icon>
-              Discuss Your Project
+            <Button href="/contact" size="md" variant="primary" icon magnetic>
+              Discuss Your Challenge
             </Button>
           </div>
         </div>
       </section>
 
-      {/* 2. FILTER & GALLERY */}
+      {/* 2. FILTER & GRID (With Quick-Swap Crossfade) */}
       <section className="py-20 md:py-28 border-b border-border bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Industry Filter Pills */}
-          <div className="flex flex-wrap items-center gap-2 mb-12">
-            <span className="text-xs font-mono uppercase text-text-muted mr-2">
-              Filter by Industry:
+          {/* Mechanical Filter Pill Control */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-12 select-none border-b border-border/80">
+            <span className="text-xs font-mono uppercase text-text-muted mr-3 hidden sm:inline-block font-bold">
+              [FILTER BY INDUSTRY]:
             </span>
-            {industriesList.map((ind) => (
-              <button
-                key={ind}
-                type="button"
-                onClick={() => setSelectedIndustry(ind)}
-                className={`text-xs font-mono px-3.5 py-1.5 rounded-full border transition-all ${
-                  selectedIndustry === ind
-                    ? "bg-accent text-accent-text font-semibold border-accent"
-                    : "bg-bg-card text-text-muted border-border hover:border-accent/40"
-                }`}
-              >
-                {ind}
-              </button>
-            ))}
+            {industries.map((ind) => {
+              const isActive = selectedIndustry === ind;
+              return (
+                <button
+                  key={ind}
+                  type="button"
+                  onClick={() => setSelectedIndustry(ind)}
+                  className={`px-4 py-2 rounded-md text-xs font-mono uppercase tracking-wider transition-all duration-150 relative ${
+                    isActive
+                      ? "bg-accent text-white font-bold shadow-lg shadow-accent/25 border border-accent"
+                      : "bg-bg-card text-text-muted hover:text-white hover:bg-bg-raised border border-border"
+                  }`}
+                >
+                  {ind}
+                </button>
+              );
+            })}
           </div>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredStudies.map((study) => (
+          {/* Quick-swap Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 transition-opacity duration-200">
+            {filteredCaseStudies.map((study) => (
               <CaseStudyCard key={study.slug} caseStudy={study} />
             ))}
           </div>
 
-          {/* Placeholder callout note for user */}
-          <div className="mt-16 p-6 rounded-xl bg-bg-raised border border-border text-center max-w-2xl mx-auto">
-            <span className="text-xs font-mono uppercase text-accent tracking-wider block mb-1">
-              Production Client Portfolio
-            </span>
-            <p className="text-xs text-text-muted">
-              Case study metrics, anonymized details, and client testimonials are structured in <code className="text-text font-mono">content/caseStudies.ts</code> ready for live enterprise references.
-            </p>
-          </div>
+          {filteredCaseStudies.length === 0 && (
+            <div className="p-12 text-center border border-border rounded-xl bg-bg-card">
+              <p className="text-text-muted font-mono text-sm">
+                No case studies found matching this industry filter.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -96,16 +98,16 @@ export default function CaseStudiesPage() {
       <section className="py-20 bg-gradient-to-b from-bg to-bg-raised">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <Badge variant="accent" className="mx-auto mb-6">
-            EVALUATE YOUR ROI
+            ENTERPRISE VALIDATION
           </Badge>
           <h2 className="text-3xl md:text-5xl font-bold font-display text-text mb-6">
-            Achieve Measurable Impact on Your Next Initiative
+            Ready to Deliver Measurable ROI?
           </h2>
           <p className="text-base md:text-lg text-text-muted max-w-2xl mx-auto mb-8">
-            Let&apos;s evaluate your current architecture bottlenecks and model target ROI milestones.
+            Connect with our solution architects to review detailed case architectures and explore benchmarks for your project.
           </p>
-          <Button href="/contact" size="lg" variant="primary" icon>
-            Book a Consultation
+          <Button href="/contact" size="lg" variant="primary" icon magnetic>
+            Book a Technical Briefing
           </Button>
         </div>
       </section>

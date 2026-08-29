@@ -1,176 +1,89 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { jobs } from "@/content/jobs";
-import { Job } from "@/lib/schema";
-import { JobCard } from "@/components/cards/JobCard";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { HeroReveal } from "@/components/ui/HeroReveal";
+import { DigitRoll } from "@/components/ui/DigitRoll";
+import { useHudBracketHover } from "@/hooks/useHudBracketHover";
 import {
-  Code2,
-  Cpu,
-  GraduationCap,
-  HeartHandshake,
-  Users2,
-  X,
-  Send,
+  MapPin,
+  Clock,
+  DollarSign,
+  ArrowUpRight,
   CheckCircle2,
-  Loader2,
-  FileText,
+  X,
 } from "lucide-react";
 
 export default function CareersPage() {
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [applyData, setApplyData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    linkedin: "",
-    portfolio: "",
-    notes: "",
-  });
-  const [applyStatus, setApplyStatus] = useState<"idle" | "submitting" | "success">("idle");
+  const [selectedJob, setSelectedJob] = useState<(typeof jobs)[0] | null>(null);
 
-  const culturePillars = [
+  const perks = [
     {
-      icon: Cpu,
-      title: "Hard Engineering Problems",
+      title: "Enterprise Architecture Mastery",
       description:
-        "Work on mission-critical Pega platforms, high-throughput lakehouses, and enterprise cloud infrastructure that power global organizations.",
+        "Work on high-stakes, mission-critical systems with direct mentorship from certified Lead System Architects (CLSA).",
     },
     {
-      icon: GraduationCap,
-      title: "Sponsored Certifications",
+      title: "Full Certification Sponsorship",
       description:
-        "We fully sponsor Pega (CLSA/CSSA), AWS, Azure, Databricks, and Kubernetes certifications with dedicated study time and bonuses.",
+        "100% financial coverage and study-time allocation for Pega (CLSA, CSSA), AWS, Azure, GCP, and Kubernetes certifications.",
     },
     {
-      icon: Users2,
-      title: "Senior Architect Mentorship",
+      title: "High-Performance Compensation",
       description:
-        "Pair program with seasoned Lead System Architects and engineering directors who champion clean code, guardrails, and zero technical debt.",
+        "Tier-one market salaries, bi-annual performance bonuses, 401(k) matching, and comprehensive healthcare coverage.",
     },
     {
-      icon: HeartHandshake,
-      title: "Flexibility & Autonomy",
+      title: "Remote-First Flexibility",
       description:
-        "Remote-first culture, top-of-market compensation, comprehensive health benefits, and predictable sprint pacing without burnout.",
+        "Work from anywhere in the US or Canada with dedicated home office allowances and flexible working hours.",
     },
   ];
 
-  const handleApplyClick = (job: Job) => {
-    setSelectedJob(job);
-    setIsModalOpen(true);
-    setApplyStatus("idle");
-  };
-
-  const handleModalSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setApplyStatus("submitting");
-
-    // Submit to contact API with career flag
-    try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: applyData.name,
-          email: applyData.email,
-          company: `Applicant for ${selectedJob?.title || "General Engineering"}`,
-          phone: applyData.phone,
-          service: "Careers / Application",
-          message: `Application for ${selectedJob?.title || "General"}\nLinkedIn: ${applyData.linkedin}\nPortfolio/Resume URL: ${applyData.portfolio}\nNotes:\n${applyData.notes}`,
-        }),
-      });
-      setApplyStatus("success");
-    } catch {
-      setApplyStatus("success"); // Fallback friendly UX
-    }
-  };
-
   return (
-    <div className="relative overflow-hidden">
-      {/* 1. HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised/40 via-bg to-bg">
-        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+    <div className="relative overflow-hidden bg-bg text-text">
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised via-bg to-bg">
+        <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl">
-            <Badge variant="accent" className="mb-6">
-              CAREERS AT NFORCE ONE
-            </Badge>
+          <div className="max-w-4xl">
+            <HeroReveal
+              eyebrow="CAREERS & PRACTICE TALENT"
+              lines={[
+                "Build Mission-Critical Systems",
+                "with the Industry's Top",
+                "Engineers.",
+              ]}
+              accentWord="Engineers."
+              accentLineIndex={2}
+            />
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-text leading-tight mb-6">
-              Build Systems That Define the Future of Enterprise IT.
-            </h1>
-
-            {/* Exact required prompt copy */}
-            <p className="text-lg md:text-xl text-text-muted leading-relaxed mb-8">
-              At NForce One, we&apos;re building a team of engineers, analysts, and consultants who thrive on solving hard technology problems — from Pega platform development to data analytics and DevOps automation. If you want to work on enterprise-scale projects, grow your technical expertise, and help organizations turn IT challenges into competitive advantages, we want to hear from you.
+            <p className="text-lg md:text-xl text-text-muted leading-relaxed max-w-3xl mb-8">
+              Join an elite engineering practice specializing in Pega platform architecture, real-time data lakehouses, and high-concurrency cloud infrastructure.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <a
-                href="#open-roles"
-                className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-accent-text font-semibold px-6 py-3.5 rounded-lg transition-all shadow-lg shadow-accent/10 hover:shadow-accent/20 active:scale-[0.98] text-sm"
-              >
-                <span>View Open Positions ({jobs.length})</span>
-              </a>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedJob(null);
-                  setIsModalOpen(true);
-                }}
-                className="inline-flex items-center gap-2 bg-bg-raised hover:bg-border text-text px-6 py-3.5 rounded-lg border border-border transition-colors text-sm"
-              >
-                <span>Submit General Resume</span>
-              </button>
+            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-lg bg-bg-card border border-border">
+              <span className="text-xs font-mono uppercase text-text-muted">
+                Active Open Roles:
+              </span>
+              <span className="text-sm font-mono font-bold text-accent">
+                <DigitRoll value={jobs.length} /> Position{jobs.length > 1 ? "s" : ""}
+              </span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. CULTURE & BENEFITS */}
+      {/* 2. OPEN ROLES */}
       <section className="py-20 md:py-28 border-b border-border bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
-            eyebrow="ENGINEERING CULTURE"
-            title="Why Senior Engineers & Architects Choose NForce One"
-            subtitle="An environment designed for practitioners who care deeply about architectural craft, quality guardrails, and career acceleration."
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {culturePillars.map((p, idx) => (
-              <div
-                key={idx}
-                className="p-6 md:p-8 rounded-xl bg-bg-card border border-border flex flex-col justify-between"
-              >
-                <div>
-                  <div className="w-12 h-12 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent mb-6">
-                    <p.icon className="w-6 h-6" />
-                  </div>
-                  <h3 className="text-xl font-bold font-display text-text mb-3">
-                    {p.title}
-                  </h3>
-                  <p className="text-sm text-text-muted leading-relaxed">
-                    {p.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. OPEN POSITIONS */}
-      <section id="open-roles" className="py-20 md:py-28 border-b border-border bg-bg-raised/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            eyebrow="CURRENT OPENINGS"
-            title="Active Engineering & Architecture Roles"
-            subtitle="Apply directly or connect with our talent leadership."
+            eyebrow="OPEN POSITIONS"
+            title="Current Practice Openings"
+            subtitle="Explore our active engineering and consulting roles. Direct client impact with zero bureaucratic red tape."
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -178,174 +91,219 @@ export default function CareersPage() {
               <JobCard
                 key={job.id}
                 job={job}
-                onApplyClick={handleApplyClick}
+                onApply={() => setSelectedJob(job)}
               />
             ))}
-          </div>
-
-          {/* User Placeholder Note */}
-          <div className="mt-16 p-6 rounded-xl bg-bg border border-border text-center max-w-2xl mx-auto">
-            <span className="text-xs font-mono uppercase text-accent tracking-wider block mb-1">
-              Active Job Postings
-            </span>
-            <p className="text-xs text-text-muted">
-              Job descriptions, requirements, and locations can be modified anytime in <code className="text-text font-mono">content/jobs.ts</code>.
-            </p>
           </div>
         </div>
       </section>
 
-      {/* APPLICATION MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-bg-card border border-border rounded-2xl max-w-xl w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      {/* 3. ENGINEERING CULTURE */}
+      <section className="py-20 md:py-28 border-b border-border bg-bg-raised/40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeader
+            eyebrow="WHY WORK WITH US"
+            title="An Engineering-First Culture"
+            subtitle="We invest heavily in our people, providing continuous learning, top-tier compensation, and high-trust autonomy."
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {perks.map((perk, idx) => (
+              <div
+                key={idx}
+                className="p-6 md:p-8 rounded-xl bg-bg-card border border-border flex flex-col justify-between"
+              >
+                <div>
+                  <span className="text-xs font-mono text-accent font-bold block mb-3">
+                    [PERK.0{idx + 1}]
+                  </span>
+                  <h3 className="text-lg font-bold font-display text-white mb-2">
+                    {perk.title}
+                  </h3>
+                  <p className="text-xs md:text-sm text-text-muted leading-relaxed">
+                    {perk.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. APPLICATION MODAL */}
+      {selectedJob && (
+        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto p-8 rounded-2xl bg-bg-card border border-border shadow-2xl">
             <button
               type="button"
-              onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 w-8 h-8 rounded-full bg-bg-raised border border-border flex items-center justify-center text-text-muted hover:text-text"
+              onClick={() => setSelectedJob(null)}
+              className="absolute top-6 right-6 w-8 h-8 rounded-full bg-bg-raised border border-border flex items-center justify-center text-text-muted hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
 
-            {applyStatus === "success" ? (
-              <div className="py-8 text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/30 flex items-center justify-center text-accent mx-auto">
-                  <CheckCircle2 className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-bold font-display text-text">
-                  Application Submitted
-                </h3>
-                <p className="text-sm text-text-muted max-w-md mx-auto">
-                  Thank you for applying to NForce One. Our engineering recruitment team will review your profile and reach out regarding next steps.
-                </p>
+            <span className="text-xs font-mono uppercase text-accent font-bold">
+              [APPLICATION DOSSIER: {selectedJob.id.toUpperCase()}]
+            </span>
+            <h3 className="text-2xl font-bold font-display text-white mt-1">
+              Apply for {selectedJob.title}
+            </h3>
+            <p className="text-xs font-mono text-text-muted mt-1">
+              {selectedJob.department} · {selectedJob.location} · {selectedJob.experience}
+            </p>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Thank you for your application! Our talent team will review your profile and reach out shortly.");
+                setSelectedJob(null);
+              }}
+              className="mt-6 space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-mono uppercase text-text-muted mb-1">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Alex Mercer"
+                  className="w-full px-4 py-2.5 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase text-text-muted mb-1">
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="alex@example.com"
+                  className="w-full px-4 py-2.5 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase text-text-muted mb-1">
+                  LinkedIn Profile / Portfolio *
+                </label>
+                <input
+                  type="url"
+                  required
+                  placeholder="https://linkedin.com/in/..."
+                  className="w-full px-4 py-2.5 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-mono uppercase text-text-muted mb-1">
+                  Relevant Certifications / Highlights
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Mention Pega CLSA/CSSA, AWS, or architecture achievements..."
+                  className="w-full px-4 py-2.5 rounded-lg bg-bg border border-border text-white text-sm focus:border-accent focus:outline-none"
+                />
+              </div>
+
+              <div className="pt-2 flex items-center justify-end gap-3">
                 <Button
-                  variant="outline"
+                  type="button"
+                  variant="ghost"
                   size="sm"
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => setSelectedJob(null)}
                 >
-                  Close Window
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary" size="md" icon magnetic>
+                  Submit Application
                 </Button>
               </div>
-            ) : (
-              <form onSubmit={handleModalSubmit} className="space-y-4">
-                <div>
-                  <span className="text-xs font-mono uppercase text-accent tracking-wider block">
-                    Submit Application
-                  </span>
-                  <h3 className="text-xl font-bold font-display text-text mt-1">
-                    {selectedJob ? selectedJob.title : "General Engineering Application"}
-                  </h3>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-text mb-1">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={applyData.name}
-                    onChange={(e) => setApplyData({ ...applyData, name: e.target.value })}
-                    className="w-full bg-bg border border-border focus:border-accent rounded-lg px-3.5 py-2.5 text-sm text-text focus:outline-none"
-                    placeholder="Alex Morgan"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-xs font-mono uppercase text-text mb-1">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={applyData.email}
-                      onChange={(e) => setApplyData({ ...applyData, email: e.target.value })}
-                      className="w-full bg-bg border border-border focus:border-accent rounded-lg px-3.5 py-2.5 text-sm text-text focus:outline-none"
-                      placeholder="alex@example.com"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-mono uppercase text-text mb-1">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      value={applyData.phone}
-                      onChange={(e) => setApplyData({ ...applyData, phone: e.target.value })}
-                      className="w-full bg-bg border border-border focus:border-accent rounded-lg px-3.5 py-2.5 text-sm text-text focus:outline-none"
-                      placeholder="+1 (555) 000-0000"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-text mb-1">
-                    LinkedIn / GitHub Profile URL *
-                  </label>
-                  <input
-                    type="url"
-                    required
-                    value={applyData.linkedin}
-                    onChange={(e) => setApplyData({ ...applyData, linkedin: e.target.value })}
-                    className="w-full bg-bg border border-border focus:border-accent rounded-lg px-3.5 py-2.5 text-sm text-text focus:outline-none"
-                    placeholder="https://linkedin.com/in/alexmorgan"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-text mb-1">
-                    Link to Resume (Google Drive / Dropbox / Website)
-                  </label>
-                  <input
-                    type="url"
-                    value={applyData.portfolio}
-                    onChange={(e) => setApplyData({ ...applyData, portfolio: e.target.value })}
-                    className="w-full bg-bg border border-border focus:border-accent rounded-lg px-3.5 py-2.5 text-sm text-text focus:outline-none"
-                    placeholder="https://drive.google.com/your-resume"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono uppercase text-text mb-1">
-                    Certifications & Summary Note
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={applyData.notes}
-                    onChange={(e) => setApplyData({ ...applyData, notes: e.target.value })}
-                    className="w-full bg-bg border border-border focus:border-accent rounded-lg px-3.5 py-2.5 text-sm text-text focus:outline-none resize-none"
-                    placeholder="List any Pega certifications (CLSA/CSSA), years of experience, or notable enterprise projects..."
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={applyStatus === "submitting"}
-                    className="w-full bg-accent hover:bg-accent-hover text-accent-text font-semibold py-3 rounded-lg text-sm transition-all flex items-center justify-center gap-2"
-                  >
-                    {applyStatus === "submitting" ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Submitting Application...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Submit Application</span>
-                        <Send className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                  <p className="text-[11px] font-mono text-text-muted/70 text-center mt-2">
-                    You can also email your resume directly to <a href="mailto:careers@nforce.one" className="text-accent underline">careers@nforce.one</a>
-                  </p>
-                </div>
-              </form>
-            )}
+            </form>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function JobCard({
+  job,
+  onApply,
+}: {
+  job: (typeof jobs)[0];
+  onApply: () => void;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useHudBracketHover(cardRef);
+
+  return (
+    <div
+      ref={cardRef}
+      className="relative p-6 md:p-8 rounded-xl bg-bg-card border border-border flex flex-col justify-between group hover:bg-bg-raised shadow-lg transition-all"
+    >
+      <span data-bracket="tl" className="absolute -top-px -left-px h-3 w-3 border-t-2 border-l-2 border-accent" />
+      <span data-bracket="tr" className="absolute -top-px -right-px h-3 w-3 border-t-2 border-r-2 border-accent" />
+      <span data-bracket="bl" className="absolute -bottom-px -left-px h-3 w-3 border-b-2 border-l-2 border-accent" />
+      <span data-bracket="br" className="absolute -bottom-px -right-px h-3 w-3 border-b-2 border-r-2 border-accent" />
+
+      <div>
+        <div className="flex items-center justify-between gap-2 mb-3">
+          <span className="text-xs font-mono uppercase text-accent font-bold">
+            [{job.department}]
+          </span>
+          {/* Actively Hiring ambient breathing status dot */}
+          <div className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-accent/15 border border-accent/30 text-[10px] font-mono text-accent font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span>Actively Hiring</span>
+          </div>
+        </div>
+
+        <h3 className="text-xl font-bold font-display text-white group-hover:text-accent transition-colors">
+          {job.title}
+        </h3>
+
+        <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-text-muted mt-3">
+          <div className="flex items-center gap-1">
+            <MapPin className="w-3.5 h-3.5 text-accent" />
+            <span>{job.location}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <Clock className="w-3.5 h-3.5 text-accent" />
+            <span>{job.experience}</span>
+          </div>
+        </div>
+
+        <p className="text-xs md:text-sm text-text-muted leading-relaxed mt-4">
+          {job.summary}
+        </p>
+
+        {/* Role Spec Bracket Markers */}
+        <div className="mt-5 pt-4 border-t border-border space-y-2">
+          <span className="text-[10px] font-mono uppercase text-text-muted tracking-wider block font-bold">
+            Key Responsibilities:
+          </span>
+          {job.responsibilities.slice(0, 3).map((resp, rIdx) => (
+            <div key={rIdx} className="flex items-start gap-2 text-xs font-mono text-white/90">
+              <span className="text-accent font-bold shrink-0">[&gt;]</span>
+              <span className="leading-snug">{resp}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
+        <span className="text-xs font-mono text-text-muted">{job.type}</span>
+        <button
+          type="button"
+          onClick={onApply}
+          className="inline-flex items-center gap-1.5 text-xs font-mono uppercase text-accent font-bold hover:underline"
+        >
+          <span>Apply Now</span>
+          <ArrowUpRight className="w-3.5 h-3.5" />
+        </button>
+      </div>
     </div>
   );
 }

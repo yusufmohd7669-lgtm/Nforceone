@@ -1,39 +1,37 @@
+"use client";
+
 import React from "react";
-import Link from "next/link";
 import { insights } from "@/content/insights";
 import { InsightCard } from "@/components/cards/InsightCard";
-import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-
-export const metadata = {
-  title: "Engineering Insights & Technical Architecture | NForce One",
-  description:
-    "Read technical articles, modernization guides, and architectural whitepapers authored by NForce One lead system architects and practice directors.",
-};
+import { HeroReveal } from "@/components/ui/HeroReveal";
 
 export default function InsightsPage() {
   return (
-    <div className="relative overflow-hidden">
-      {/* 1. HERO */}
-      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised/40 via-bg to-bg">
-        <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
+    <div className="relative overflow-hidden bg-bg text-text">
+      {/* 1. HERO SECTION */}
+      <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised via-bg to-bg">
+        <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-3xl">
-            <Badge variant="accent" className="mb-6">
-              TECHNICAL THOUGHT LEADERSHIP
-            </Badge>
+          <div className="max-w-4xl">
+            <HeroReveal
+              eyebrow="ENGINEERING NOTES & ARCHITECTURE"
+              lines={[
+                "Practical Architecture Guides &",
+                "Technical Modernization",
+                "Insights.",
+              ]}
+              accentWord="Insights."
+              accentLineIndex={2}
+            />
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold font-display tracking-tight text-text leading-tight mb-6">
-              Engineering Notes, Architecture Guides & Insights.
-            </h1>
-
-            <p className="text-lg md:text-xl text-text-muted leading-relaxed mb-8">
+            <p className="text-lg md:text-xl text-text-muted leading-relaxed max-w-3xl mb-8">
               Practical, battle-tested insights on Pega Infinity upgrades, low-latency streaming lakehouses, automated quality pipelines, and enterprise generative AI.
             </p>
 
-            <Button href="/contact" size="md" variant="primary" icon>
-              Consult with Our Architects
+            <Button href="/contact" size="md" variant="primary" icon magnetic>
+              Consult with Our Authors
             </Button>
           </div>
         </div>
@@ -46,16 +44,6 @@ export default function InsightsPage() {
             {insights.map((insight) => (
               <InsightCard key={insight.slug} insight={insight} />
             ))}
-          </div>
-
-          {/* User Placeholder Note */}
-          <div className="mt-16 p-6 rounded-xl bg-bg-raised border border-border text-center max-w-2xl mx-auto">
-            <span className="text-xs font-mono uppercase text-accent tracking-wider block mb-1">
-              Publishing Pipeline
-            </span>
-            <p className="text-xs text-text-muted">
-              New articles, whitepapers, and guides can be added to <code className="text-text font-mono">content/insights.ts</code> with zero CMS configuration needed.
-            </p>
           </div>
         </div>
       </section>
@@ -72,7 +60,7 @@ export default function InsightsPage() {
           <p className="text-base md:text-lg text-text-muted max-w-2xl mx-auto mb-8">
             Connect directly with the authors and lead architects behind our technical publications.
           </p>
-          <Button href="/contact" size="lg" variant="primary" icon>
+          <Button href="/contact" size="lg" variant="primary" icon magnetic>
             Book a Consultation
           </Button>
         </div>
