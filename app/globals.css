@@ -3,18 +3,18 @@
 @tailwind utilities;
 
 :root {
-  /* NF1 Official Logo Color Palette */
-  --color-bg: #050505;          /* Deep pitch black matching logo backdrop */
-  --color-bg-raised: #121214;   /* Charcoal raised container */
-  --color-bg-card: #0c0c0e;     /* Dark card surface */
-  --color-text: #ffffff;        /* Pure crisp white from the 'N' & 'Let's Do' */
-  --color-text-muted: #9ca3af;  /* Metallic silver text */
-  --color-border: #222226;      /* Subtle dark boundary */
-  --color-border-light: #33333a;/* Highlight border */
-  --color-accent: #E50914;      /* Official NF1 Racing Crimson Red from '1' & 'IT!' */
-  --color-accent-hover: #ff1e27;/* High-energy scarlet hover */
-  --color-accent-text: #ffffff; /* Crisp white text over red buttons */
-  --color-accent-glow: rgba(229, 9, 20, 0.35);
+  /* NF1 Official Logo & Technical Blueprint Color Palette */
+  --color-bg: #050505;          /* Deep pitch black */
+  --color-bg-raised: #101012;   /* Blueprint charcoal */
+  --color-bg-card: #0a0a0c;     /* Dark card backdrop */
+  --color-text: #ffffff;        /* Pure crisp white */
+  --color-text-muted: #9ca3af;  /* Metallic silver */
+  --color-border: #1e1e24;      /* Hairline boundary */
+  --color-border-light: #2c2c34;/* Highlight border */
+  --color-accent: #E50914;      /* Official NF1 Racing Crimson Red */
+  --color-accent-hover: #ff1e27;/* Vibrant scarlet */
+  --color-accent-text: #ffffff; /* Pure white on red */
+  --color-accent-glow: rgba(229, 9, 20, 0.4);
 }
 
 @layer base {
@@ -26,7 +26,7 @@
     background-color: var(--color-bg);
     color: var(--color-text);
     color-scheme: dark;
-    scroll-behavior: auto; /* Lenis handles smooth scrolling */
+    scroll-behavior: auto;
   }
 
   body {
@@ -46,7 +46,7 @@
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -55,38 +55,94 @@
 
 ::-webkit-scrollbar-thumb {
   background: var(--color-border);
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-accent);
 }
 
-/* Background grid pattern with subtle crimson/white glow */
+/* Technical blueprint grid pattern */
 .bg-grid-pattern {
-  background-size: 48px 48px;
+  background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(34, 34, 38, 0.45) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(34, 34, 38, 0.45) 1px, transparent 1px);
+    linear-gradient(to right, rgba(30, 30, 36, 0.5) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 30, 36, 0.5) 1px, transparent 1px);
 }
 
 .bg-dot-pattern {
-  background-image: radial-gradient(rgba(156, 163, 175, 0.15) 1px, transparent 1px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(156, 163, 175, 0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-/* NF1 Glow effects */
+/* Corner registration marks */
+.corner-bracket-tl::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--color-accent);
+  border-left: 2px solid var(--color-accent);
+}
+
+.corner-bracket-tr::after {
+  content: "";
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-top: 2px solid var(--color-accent);
+  border-right: 2px solid var(--color-accent);
+}
+
+.corner-bracket-bl::before {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--color-accent);
+  border-left: 2px solid var(--color-accent);
+}
+
+.corner-bracket-br::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  border-bottom: 2px solid var(--color-accent);
+  border-right: 2px solid var(--color-accent);
+}
+
+/* Glow effects */
 .accent-glow {
-  box-shadow: 0 0 40px -10px var(--color-accent-glow);
+  box-shadow: 0 0 35px -8px var(--color-accent-glow);
 }
 
-.border-glow {
-  box-shadow: 0 0 20px -5px rgba(229, 9, 20, 0.25);
+/* Marquee native keyframe */
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-/* Speedline badge decoration */
-.speed-border {
-  border-right: 3px solid var(--color-accent);
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+  }
 }
 
 /* Accessible focus outline */
