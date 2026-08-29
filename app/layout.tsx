@@ -5,7 +5,6 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Preloader } from "@/components/ui/Preloader";
-import { MagneticCursor } from "@/components/ui/MagneticCursor";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -120,9 +119,6 @@ export default function RootLayout({
       <body className="bg-bg text-text antialiased selection:bg-accent selection:text-white min-h-screen flex flex-col font-sans overflow-x-hidden">
         {/* Terminal Boot Sequence */}
         <Preloader />
-
-        {/* Site-Wide Magnetic HUD Cursor */}
-        <MagneticCursor />
 
         {/* Accessible Skip Link */}
         <a
