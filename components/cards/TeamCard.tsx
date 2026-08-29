@@ -19,10 +19,16 @@ export function TeamCard({ member, className }: TeamCardProps) {
     <div
       ref={cardRef}
       className={cn(
-        "flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border hover:border-accent/40 transition-all duration-300 relative group",
+        "flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border hover:border-accent/40 transition-all duration-300 relative group shadow-lg hover:shadow-black/60",
         className
       )}
     >
+      {/* HUD Reticle Corner Brackets */}
+      <span className="hud-corner-tl" />
+      <span className="hud-corner-tr" />
+      <span className="hud-corner-bl" />
+      <span className="hud-corner-br" />
+
       <div>
         <div className="flex items-center gap-4 mb-4">
           <div className="w-14 h-14 rounded-full bg-bg-raised border border-border flex items-center justify-center text-accent group-hover:border-accent/40 transition-colors">

@@ -6,7 +6,6 @@ import { CaseStudy } from "@/lib/schema";
 import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { use3DTilt } from "@/lib/animations/hooks";
-import { Counter } from "../ui/Counter";
 
 interface CaseStudyCardProps {
   caseStudy: CaseStudy;
@@ -22,10 +21,16 @@ export function CaseStudyCard({ caseStudy, className }: CaseStudyCardProps) {
       ref={cardRef}
       href={`/case-studies/${caseStudy.slug}`}
       className={cn(
-        "group relative flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border transition-all duration-300 hover:border-accent/60 hover:bg-bg-raised hover:-translate-y-1 shadow-xl hover:shadow-black/60",
+        "group relative flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border transition-all duration-300 hover:border-accent hover:bg-bg-raised hover:-translate-y-1 shadow-xl hover:shadow-black/60",
         className
       )}
     >
+      {/* HUD Reticle Corner Brackets (Signature Moment #5) */}
+      <span className="hud-corner-tl" />
+      <span className="hud-corner-tr" />
+      <span className="hud-corner-bl" />
+      <span className="hud-corner-br" />
+
       <div>
         {/* Header tags */}
         <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
@@ -45,7 +50,7 @@ export function CaseStudyCard({ caseStudy, className }: CaseStudyCardProps) {
           {caseStudy.summary}
         </p>
 
-        {/* Metrics Bar with Count-up */}
+        {/* Metrics Bar with Highlight */}
         <div className="grid grid-cols-2 gap-4 mt-6 pt-6 border-t border-border bg-bg/50 p-4 rounded-lg">
           {caseStudy.metrics.slice(0, 2).map((m, idx) => (
             <div key={idx} className="flex flex-col">

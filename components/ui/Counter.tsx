@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "@/lib/animations/gsap";
+import { usePrefersReducedMotion } from "@/lib/animations/hooks";
 import { cn } from "@/lib/utils";
 
 interface CounterProps {
@@ -8,110 +11,163 @@ interface CounterProps {
   prefix?: string;
   suffix?: string;
   decimals?: number;
-  duration?: number;
   label?: string;
   specCode?: string;
   className?: string;
 }
+
+const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 export function Counter({
   value,
   prefix = "",
   suffix = "",
   decimals = 0,
-  duration = 1800,
   label,
   specCode,
   className,
 }: CounterProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const targetNumber =
+  const progressBarRef = useRef<HTMLDivElement>(null);
+  const tagRef = useRef<HTMLDivElement>(null);
+  const prefersReduced = usePrefersReducedMotion();
+
+  // Format the target string
+  const formattedString =
     typeof value === "number"
-      ? value
-      : parseFloat(value.toString().replace(/[^0-9.]/g, "")) || 0;
+      ? decimals > 0
+        ? value.toFixed(decimals)
+        : value.toString()
+      : value.toString();
 
-  const [currentNumber, setCurrentNumber] = useState<number>(0);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const chars = formattedString.split("");
 
-  useEffect(() => {
-    // Check if user prefers reduced motion
-    const prefersReducedMotion =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  useGSAP(
+    () => {
+      if (!containerRef.current || prefersReduced) return;
 
-    if (prefersReducedMotion) {
-      setCurrentNumber(targetNumber);
-      setHasAnimated(true);
-      return;
-    }
+      const columns = containerRef.current.querySelectorAll(".digit-column-track");
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: "top 85%",
+          toggleActions: "play none none reverse",
+        },
+      });
 
-          let startTime: number | null = null;
-          const startVal = 0;
+      // 1. Tag glitch flicker on entrance
+      if (tagRef.current) {
+        tl.to(tagRef.current, {
+          opacity: 0.2,
+          duration: 0.05,
+          repeat: 3,
+          yoyo: true,
+          ease: "none",
+        });
+      }
 
-          const step = (timestamp: number) => {
-            if (!startTime) startTime = timestamp;
-            const progress = Math.min((timestamp - startTime) / duration, 1);
-            
-            // Ease out cubic
-            const easeProgress = 1 - Math.pow(1 - progress, 3);
-            const val = startVal + (targetNumber - startVal) * easeProgress;
+      // 2. Mechanical Digit Roll
+      columns.forEach((col, index) => {
+        const targetDigit = parseInt(col.getAttribute("data-target") || "0", 10);
+        // Each digit is 10% of the total 10-digit column height
+        const targetYPercent = -targetDigit * 10;
 
-            setCurrentNumber(
-              decimals > 0 ? parseFloat(val.toFixed(decimals)) : Math.floor(val)
-            );
+        tl.fromTo(
+          col,
+          { yPercent: 0 },
+          {
+            yPercent: targetYPercent,
+            duration: 1.1 + index * 0.1,
+            ease: "power3.out",
+          },
+          index === 0 ? "-=0.1" : "<0.06"
+        );
+      });
 
-            if (progress < 1) {
-              window.requestAnimationFrame(step);
-            } else {
-              setCurrentNumber(targetNumber);
-            }
-          };
-
-          window.requestAnimationFrame(step);
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -50px 0px" }
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    // Safety fallback: if observer didn't trigger in 2 seconds, display full number
-    const timeout = setTimeout(() => {
-      setCurrentNumber(targetNumber);
-      setHasAnimated(true);
-    }, 2500);
-
-    return () => {
-      observer.disconnect();
-      clearTimeout(timeout);
-    };
-  }, [targetNumber, duration, decimals, hasAnimated]);
+      // 3. Progress bar fills in sync with digit roll
+      if (progressBarRef.current) {
+        tl.fromTo(
+          progressBarRef.current,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 1.2,
+            ease: "power3.out",
+          },
+          0.1
+        );
+      }
+    },
+    { scope: containerRef, dependencies: [prefersReduced, formattedString] }
+  );
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "relative p-5 md:p-6 rounded-lg bg-bg-card border border-border/80 flex flex-col justify-between group hover:border-accent/50 transition-all",
+        "relative p-5 md:p-6 rounded-lg bg-bg-card border border-border flex flex-col justify-between group hover:border-accent/60 transition-all duration-300 shadow-lg hover:shadow-black/60",
         className
       )}
     >
-      {/* Blueprint corner crosshair */}
-      <div className="absolute top-2 right-2 font-mono text-[9px] text-text-muted/40 group-hover:text-accent transition-colors">
+      {/* HUD Corner Registration Mark */}
+      <div
+        ref={tagRef}
+        className="absolute top-2 right-2 font-mono text-[9px] text-text-muted/50 group-hover:text-accent transition-colors select-none"
+      >
         {specCode || "+"}
       </div>
 
       <div>
-        <div className="text-3xl md:text-4xl lg:text-5xl font-extrabold font-display tracking-tight text-white flex items-baseline">
+        {/* Number Display with Mechanical Digit Roll */}
+        <div className="text-3xl md:text-4xl lg:text-5xl font-extrabold font-display tracking-tight text-white flex items-baseline select-none">
           {prefix && <span className="text-accent mr-0.5">{prefix}</span>}
-          <span>{currentNumber}</span>
-          {suffix && <span className="text-accent ml-1 text-2xl md:text-3xl">{suffix}</span>}
+
+          <div className="inline-flex items-baseline overflow-hidden h-[1.15em] leading-[1.15em]">
+            {chars.map((char, i) => {
+              const isDigit = !isNaN(parseInt(char, 10));
+
+              if (!isDigit) {
+                return (
+                  <span key={i} className="inline-block text-white">
+                    {char}
+                  </span>
+                );
+              }
+
+              return (
+                <div
+                  key={i}
+                  className="relative inline-block overflow-hidden h-[1.15em] leading-[1.15em] w-[0.62em]"
+                >
+                  <div
+                    className="digit-column-track flex flex-col will-change-transform"
+                    data-target={char}
+                    style={
+                      prefersReduced
+                        ? { transform: `translateY(-${parseInt(char, 10) * 10}%)` }
+                        : undefined
+                    }
+                  >
+                    {DIGITS.map((d) => (
+                      <span
+                        key={d}
+                        className="h-[1.15em] leading-[1.15em] flex items-center justify-center text-white"
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {suffix && (
+            <span className="text-accent ml-1 text-2xl md:text-3xl font-extrabold">
+              {suffix}
+            </span>
+          )}
         </div>
 
         {label && (
@@ -121,10 +177,12 @@ export function Counter({
         )}
       </div>
 
+      {/* Underline Bar filling in sync */}
       <div className="w-full bg-border h-0.5 mt-4 rounded-full overflow-hidden">
         <div
-          className="bg-accent h-full transition-all duration-1000 ease-out"
-          style={{ width: hasAnimated ? "100%" : "0%" }}
+          ref={progressBarRef}
+          className="bg-accent h-full origin-left will-change-transform"
+          style={prefersReduced ? { transform: "scaleX(1)" } : { transform: "scaleX(0)" }}
         />
       </div>
     </div>

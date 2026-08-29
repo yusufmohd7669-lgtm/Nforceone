@@ -14,10 +14,16 @@ export function InsightCard({ insight, className }: InsightCardProps) {
     <Link
       href={`/insights/${insight.slug}`}
       className={cn(
-        "group flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border transition-all duration-300 hover:border-accent/60 hover:bg-bg-raised hover:-translate-y-1 relative overflow-hidden",
+        "group flex flex-col justify-between p-6 md:p-8 rounded-xl bg-bg-card border border-border transition-all duration-300 hover:border-accent hover:bg-bg-raised hover:-translate-y-1 relative overflow-hidden shadow-lg hover:shadow-black/60",
         className
       )}
     >
+      {/* HUD Reticle Corner Brackets */}
+      <span className="hud-corner-tl" />
+      <span className="hud-corner-tr" />
+      <span className="hud-corner-bl" />
+      <span className="hud-corner-br" />
+
       {/* Top Accent Line that animates on hover */}
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
 

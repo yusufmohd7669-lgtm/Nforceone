@@ -12,8 +12,9 @@ import { Counter } from "@/components/ui/Counter";
 import { ServicesTable } from "@/components/ui/ServicesTable";
 import { CaseStudyCard } from "@/components/cards/CaseStudyCard";
 import { InsightCard } from "@/components/cards/InsightCard";
-import { HeroGlow } from "@/components/ui/HeroGlow";
+import { HeroParallax } from "@/components/hero/HeroParallax";
 import { HeroHeadline } from "@/components/hero/HeroHeadline";
+import { ScanlineSweep } from "@/components/ui/ScanlineSweep";
 import { Reveal } from "@/components/ui/Reveal";
 import {
   Layers,
@@ -78,21 +79,26 @@ export default function HomePage() {
 
   return (
     <div className="relative overflow-hidden bg-bg text-text">
-      {/* 1. HERO SECTION */}
-      <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised via-bg to-bg">
-        {/* Blueprint Grid Accent & Interactive Cursor Glow */}
-        <div className="absolute inset-0 bg-grid-pattern opacity-40 pointer-events-none" />
-        <HeroGlow />
+      {/* 1. HERO SECTION (Signature Moment #1) */}
+      <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 border-b border-border bg-gradient-to-b from-bg-raised via-bg to-bg overflow-hidden">
+        {/* Signature Scanline Sweep (1 of 3) */}
+        <ScanlineSweep delay={0.1} />
+
+        {/* Multi-Layer Mouse Parallax & Radial Glow */}
+        <HeroParallax />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="max-w-4xl">
-            {/* Eyebrow badge with pulse dot */}
+            {/* Eyebrow badge with radar ping animation */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/15 border border-accent/40 text-accent font-mono text-xs uppercase tracking-wider mb-6 font-bold shadow-sm shadow-accent/10">
-              <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+              <span className="relative flex h-2 w-2">
+                <span className="animate-radar-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
+              </span>
               <span>[SYS.SPEC] Enterprise IT Architecture & Pega Specialization</span>
             </div>
 
-            {/* Precision 3-Line Masked Headline Reveal */}
+            {/* Precision 3-Line Masked Headline Reveal with 120ms HUD flicker */}
             <HeroHeadline />
 
             {/* Tightened, Punchy Subhead */}
@@ -101,7 +107,7 @@ export default function HomePage() {
               scalable cloud data platforms, automated QA testing, and resilient custom software for enterprise leaders.
             </p>
 
-            {/* CTAs with Magnetic Hover Physics */}
+            {/* CTAs with Magnetic Hover Physics & Parallax */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mb-16">
               <Button href="/contact" size="lg" variant="primary" icon magnetic>
                 Book a Consultation
@@ -115,7 +121,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Metric Counters Banner (Rock-Solid Animated Counters) */}
+          {/* Metric Counters Banner (Signature Moment #3: Mechanical Digit-Roll) */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <Counter
               value={14}
@@ -170,7 +176,7 @@ export default function HomePage() {
         <Marquee items={marqueeItems} speed={35} />
       </section>
 
-      {/* 3. VALUE PILLARS (WHY US) WITH REVEAL */}
+      {/* 3. VALUE PILLARS (WHY US) WITH HUD RETICLE CORNERS */}
       <section className="py-20 md:py-24 border-b border-border bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeader
@@ -179,13 +185,19 @@ export default function HomePage() {
             subtitle="We take full architectural ownership to build systems that scale cleanly, pass strict compliance audits, and eliminate technical debt."
           />
 
-          <Reveal stagger={0.1}>
+          <Reveal stagger={0.08} y={22}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {valuePillars.map((pillar, idx) => (
                 <div
                   key={idx}
-                  className="relative p-6 md:p-7 rounded-xl bg-bg-card border border-border hover:border-accent/60 transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 shadow-lg hover:shadow-black/60"
+                  className="relative p-6 md:p-7 rounded-xl bg-bg-card border border-border hover:border-accent transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 shadow-lg hover:shadow-black/60"
                 >
+                  {/* HUD Corner Reticle Brackets (Signature Moment #5) */}
+                  <span className="hud-corner-tl" />
+                  <span className="hud-corner-tr" />
+                  <span className="hud-corner-bl" />
+                  <span className="hud-corner-br" />
+
                   <div>
                     <div className="flex items-center justify-between mb-5">
                       <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent group-hover:border-accent/40 transition-colors">
@@ -212,10 +224,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. CONSOLIDATED FLAGSHIP PEGA PRACTICE */}
+      {/* 4. CONSOLIDATED FLAGSHIP PEGA PRACTICE (Signature Scanline Sweep 2 of 3) */}
       <section className="py-16 md:py-20 border-b border-border bg-gradient-to-r from-bg-raised via-bg-card to-bg-raised relative overflow-hidden">
+        {/* Signature Scanline Sweep (2 of 3) */}
+        <ScanlineSweep />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Reveal>
+          <Reveal y={22}>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8 space-y-5">
                 <div className="flex flex-wrap items-center gap-2">
@@ -248,7 +263,9 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-4 p-6 rounded-xl bg-bg border border-border space-y-3 border-l-4 border-l-accent shadow-2xl">
+              <div className="lg:col-span-4 p-6 rounded-xl bg-bg border border-border space-y-3 border-l-4 border-l-accent shadow-2xl relative group">
+                <span className="hud-corner-tr" />
+                <span className="hud-corner-br" />
                 <span className="text-[11px] font-mono uppercase text-accent font-bold block">
                   [SYS.ARCH.PEGA]
                 </span>
@@ -291,7 +308,7 @@ export default function HomePage() {
           </div>
 
           {/* Scannable Indexed Technical Table with Reveal */}
-          <Reveal>
+          <Reveal y={20}>
             <ServicesTable />
           </Reveal>
         </div>
@@ -312,7 +329,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <Reveal stagger={0.12}>
+          <Reveal stagger={0.08} y={22}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {caseStudies.slice(0, 3).map((study) => (
                 <CaseStudyCard key={study.slug} caseStudy={study} />
@@ -331,14 +348,20 @@ export default function HomePage() {
             subtitle="Deep domain architecture meeting strict compliance, high concurrency, and high-volume transaction requirements."
           />
 
-          <Reveal stagger={0.08}>
+          <Reveal stagger={0.06} y={20}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {industries.map((ind) => (
                 <Link
                   key={ind.slug}
                   href={`/industries/${ind.slug}`}
-                  className="group p-6 rounded-xl bg-bg-card border border-border hover:border-accent/60 hover:bg-bg-raised transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 shadow-lg hover:shadow-black/60"
+                  className="group p-6 rounded-xl bg-bg-card border border-border hover:border-accent hover:bg-bg-raised transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 shadow-lg hover:shadow-black/60 relative"
                 >
+                  {/* HUD Corner Reticle Brackets */}
+                  <span className="hud-corner-tl" />
+                  <span className="hud-corner-tr" />
+                  <span className="hud-corner-bl" />
+                  <span className="hud-corner-br" />
+
                   <div>
                     <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent mb-4 group-hover:border-accent/40 transition-colors">
                       <Building2 className="w-5 h-5" />
@@ -377,7 +400,7 @@ export default function HomePage() {
             </Button>
           </div>
 
-          <Reveal stagger={0.1}>
+          <Reveal stagger={0.08} y={22}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {insights.slice(0, 3).map((insight) => (
                 <InsightCard key={insight.slug} insight={insight} />
@@ -387,10 +410,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. GLOBAL CTA BANNER */}
+      {/* 9. GLOBAL CTA BANNER (Signature Scanline Sweep 3 of 3) */}
       <section className="py-20 md:py-24 bg-gradient-to-b from-bg to-bg-raised relative overflow-hidden">
+        {/* Signature Scanline Sweep (3 of 3) */}
+        <ScanlineSweep />
+
+        {/* Pulsing Breathing Radial Glow */}
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
+          <div className="w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(229,9,20,0.15)_0%,transparent_70%)] animate-pulse blur-3xl" />
+        </div>
+
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <Reveal>
+          <Reveal y={22}>
             <Badge variant="accent" className="mx-auto mb-6">
               [SYS.INIT] LET&apos;S COLLABORATE
             </Badge>

@@ -16,36 +16,36 @@ export function HeroHeadline() {
 
       const lines = containerRef.current.querySelectorAll(".hero-line-inner");
 
-      const tl = gsap.timeline({ delay: 0.15 });
+      const tl = gsap.timeline({ delay: 0.1 });
 
-      // 1. Staggered line rise from overflow-hidden mask
+      // 1. Signature expo.out line reveal from overflow:hidden
       tl.fromTo(
         lines,
         {
-          y: "110%",
+          yPercent: 120,
           opacity: 0,
         },
         {
-          y: "0%",
+          yPercent: 0,
           opacity: 1,
-          duration: 1,
+          duration: 1.1,
           stagger: 0.12,
-          ease: "power4.out",
+          ease: "expo.out",
         }
       );
 
-      // 2. HUD text flicker on 'Advantages.'
+      // 2. Signature 120ms HUD double-flicker on "Advantages."
       if (advantagesRef.current) {
         tl.to(
           advantagesRef.current,
           {
-            opacity: 0.4,
-            duration: 0.06,
+            opacity: 0.3,
+            duration: 0.03,
             repeat: 3,
             yoyo: true,
             ease: "none",
           },
-          "-=0.2"
+          "+=0.02"
         );
       }
     },
