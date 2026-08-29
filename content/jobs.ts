@@ -1,0 +1,85 @@
+import { Job } from "@/lib/schema";
+
+export const jobs: Job[] = [
+  {
+    id: "lead-pega-architect",
+    slug: "lead-pega-architect",
+    title: "Lead Pega Architect (CLSA)",
+    department: "Pega Practice",
+    location: "Remote / Hybrid (Dallas, TX)",
+    type: "Full-Time",
+    experience: "8+ Years",
+    summary: "Lead enterprise Pega Infinity implementations, architect complex situational layer cakes, and guide client engineering leadership through digital workflow transformations.",
+    responsibilities: [
+      "Design target-state Pega class structures, application architectures, and integration layers for Fortune 500 clients.",
+      "Mentor and lead teams of Senior System Architects (CSSA) and System Architects (CSA).",
+      "Ensure adherence to Pega guardrails, achieve 90+ guardrail scores, and enforce automated testing.",
+      "Collaborate directly with client C-suite stakeholders and Enterprise Architects to translate strategic goals into technical execution.",
+    ],
+    qualifications: [
+      "Pega Certified Lead System Architect (CLSA) certification is required.",
+      "Minimum 8+ years of hands-on Pega application development and architecture experience.",
+      "Deep expertise in Pega Infinity, Customer Decision Hub (CDH), Case Management, and Pega Cloud.",
+      "Proven track record of designing large-scale distributed enterprise integrations (REST, Kafka, SOAP).",
+    ],
+    niceToHave: [
+      "Experience with Pega Constellation UI architecture.",
+      "AWS / Azure cloud certification.",
+    ],
+    active: true,
+  },
+  {
+    id: "senior-qa-automation-engineer",
+    slug: "senior-qa-automation-engineer",
+    title: "Senior QA Automation Engineer",
+    department: "Quality Engineering",
+    location: "Remote",
+    type: "Full-Time",
+    experience: "5+ Years",
+    summary: "Architect and scale automated test frameworks across modern web applications, microservices, and specialized enterprise platforms.",
+    responsibilities: [
+      "Build maintainable, end-to-end test automation frameworks using Playwright, TypeScript, and Cypress.",
+      "Integrate automated test suites into continuous delivery pipelines (GitHub Actions / GitLab CI).",
+      "Conduct load and stress testing using k6 and Apache JMeter to benchmark system concurrency.",
+      "Collaborate with developers to establish rigorous unit and API contract testing standards.",
+    ],
+    qualifications: [
+      "5+ years of experience in software quality engineering and automated test architecture.",
+      "Strong coding proficiency in TypeScript, JavaScript, or Python.",
+      "Demonstrated experience testing complex distributed systems and REST/GraphQL APIs.",
+      "Solid understanding of CI/CD integration and test reporting tools.",
+    ],
+    niceToHave: [
+      "Familiarity with Pega Scenario Testing or PegaUnit.",
+      "ISTQB certification.",
+    ],
+    active: true,
+  },
+  {
+    id: "senior-cloud-data-engineer",
+    slug: "senior-cloud-data-engineer",
+    title: "Senior Cloud Data Engineer",
+    department: "Data & AI",
+    location: "Remote / Hybrid (Dallas, TX)",
+    type: "Full-Time",
+    experience: "5+ Years",
+    summary: "Engineer petabyte-scale data pipelines, streaming ingestion frameworks, and cloud lakehouse foundations on Databricks and Snowflake.",
+    responsibilities: [
+      "Design, build, and optimize scalable ETL/ELT pipelines using Apache Spark, Python, and SQL.",
+      "Implement real-time streaming architectures using Apache Kafka and Apache Flink.",
+      "Model dimensional data schemas and manage semantic layers with dbt.",
+      "Automate data quality validation rules and monitor pipeline latency SLOs.",
+    ],
+    qualifications: [
+      "5+ years of production experience in data engineering and distributed systems.",
+      "Deep expertise in Apache Spark, Databricks, Snowflake, or BigQuery.",
+      "Strong programming skills in Python and advanced SQL.",
+      "Hands-on experience with orchestration tools such as Apache Airflow or Dagster.",
+    ],
+    niceToHave: [
+      "Databricks or Snowflake professional certifications.",
+      "Experience with Delta Lake / Apache Iceberg table formats.",
+    ],
+    active: true,
+  },
+];

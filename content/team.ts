@@ -1,0 +1,58 @@
+import { TeamMember } from "@/lib/schema";
+
+export const teamMembers: TeamMember[] = [
+  {
+    id: "alex-chen",
+    name: "Alex Chen",
+    role: "Chief Executive Officer & Managing Partner",
+    bio: "Over 18 years of experience leading enterprise IT modernization and large-scale digital transformations across Fortune 500 financial and insurance institutions.",
+    certifications: ["PMP", "AWS Certified Solutions Architect", "Executive Leadership (Stanford)"],
+    specialization: "Enterprise Technology Strategy & Digital Delivery",
+    featured: true,
+  },
+  {
+    id: "siddharth-sharma",
+    name: "Siddharth Sharma",
+    role: "Principal Pega Architect & Practice Lead",
+    bio: "Pega Certified Lead System Architect (CLSA) with 14+ years dedicated to mission-critical Pega implementations, Case Management, and Customer Decision Hub architectures.",
+    certifications: ["Pega Certified Lead System Architect (CLSA)", "Pega Certified Senior System Architect (CSSA)", "Pega Certified Decisioning Consultant"],
+    specialization: "Pega Infinity Architecture, CDH & Enterprise Workflow Automation",
+    featured: true,
+  },
+  {
+    id: "elena-rostova",
+    name: "Elena Rostova",
+    role: "VP of Data Engineering & Analytics",
+    bio: "Former Big Data engineering director at leading tech firms, specializing in petabyte-scale lakehouse platforms, real-time Kafka streams, and distributed Apache Spark clusters.",
+    certifications: ["Databricks Certified Solutions Architect", "Snowflake SnowPro Core", "Google Cloud Professional Data Engineer"],
+    specialization: "Cloud Lakehouse Architecture, Real-Time Streaming & AI Pipelines",
+    featured: true,
+  },
+  {
+    id: "marcus-vance",
+    name: "Marcus Vance",
+    role: "Director of Quality Engineering & Automation",
+    bio: "Pioneer in continuous test automation and performance engineering with deep expertise in automated regression frameworks, Pega Unit testing, and CI/CD quality gates.",
+    certifications: ["ISTQB Advanced Technical Test Analyst", "Certified ScrumMaster (CSM)", "Pega Certified System Architect (CSA)"],
+    specialization: "Test Automation Frameworks, Performance Profiling & SRE",
+    featured: true,
+  },
+  {
+    id: "sarah-jenkins",
+    name: "Sarah Jenkins",
+    role: "Head of Cloud Infrastructure & DevOps",
+    bio: "Expert cloud architect focused on immutable Infrastructure as Code, Kubernetes container platforms, GitOps delivery models, and multi-region high availability.",
+    certifications: ["Certified Kubernetes Administrator (CKA)", "HashiCorp Certified: Terraform Associate", "Azure Solutions Architect Expert"],
+    specialization: "Kubernetes, DevSecOps & Enterprise Cloud Foundations",
+    featured: false,
+  },
+  {
+    id: "david-kim",
+    name: "David Kim",
+    role: "Principal AI & Machine Learning Engineer",
+    bio: "Specializes in enterprise generative AI architectures, retrieval-augmented generation (RAG) systems, vector database engineering, and secure private LLM deployment.",
+    certifications: ["AWS Certified Machine Learning - Specialty", "DeepLearning.AI LLM Specialist"],
+    specialization: "Enterprise RAG Pipelines, Vector Search & Autonomous Agents",
+    featured: false,
+  },
+];

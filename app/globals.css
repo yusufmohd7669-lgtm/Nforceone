@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* NF1 Official Logo Color Palette */
+  --color-bg: #050505;          /* Deep pitch black matching logo backdrop */
+  --color-bg-raised: #121214;   /* Charcoal raised container */
+  --color-bg-card: #0c0c0e;     /* Dark card surface */
+  --color-text: #ffffff;        /* Pure crisp white from the 'N' & 'Let's Do' */
+  --color-text-muted: #9ca3af;  /* Metallic silver text */
+  --color-border: #222226;      /* Subtle dark boundary */
+  --color-border-light: #33333a;/* Highlight border */
+  --color-accent: #E50914;      /* Official NF1 Racing Crimson Red from '1' & 'IT!' */
+  --color-accent-hover: #ff1e27;/* High-energy scarlet hover */
+  --color-accent-text: #ffffff; /* Crisp white text over red buttons */
+  --color-accent-glow: rgba(229, 9, 20, 0.35);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    color-scheme: dark;
+    scroll-behavior: auto; /* Lenis handles smooth scrolling */
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #ffffff;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* Background grid pattern with subtle crimson/white glow */
+.bg-grid-pattern {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(34, 34, 38, 0.45) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(34, 34, 38, 0.45) 1px, transparent 1px);
+}
+
+.bg-dot-pattern {
+  background-image: radial-gradient(rgba(156, 163, 175, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* NF1 Glow effects */
+.accent-glow {
+  box-shadow: 0 0 40px -10px var(--color-accent-glow);
+}
+
+.border-glow {
+  box-shadow: 0 0 20px -5px rgba(229, 9, 20, 0.25);
+}
+
+/* Speedline badge decoration */
+.speed-border {
+  border-right: 3px solid var(--color-accent);
+}
+
+/* Accessible focus outline */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}
