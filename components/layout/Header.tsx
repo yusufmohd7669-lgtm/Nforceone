@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { services } from "@/content/services";
 import { Button } from "../ui/Button";
 import { Logo } from "../ui/Logo";
-import { gsap } from "@/lib/animations/gsap";
 import {
   ChevronDown,
   Menu,
@@ -24,37 +23,11 @@ export function Header() {
   const pathname = usePathname();
 
   useEffect(() => {
-    let lastScrollY = window.scrollY;
+    const handleScroll = () => setIsScrolled(window.scrollY > 60);
 
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const scrolled = currentScrollY > 60;
-      setIsScrolled(scrolled);
-
-      if (headerRef.current) {
-        if (scrolled) {
-          gsap.to(headerRef.current, {
-            backgroundColor: "rgba(5, 5, 5, 0.95)",
-            paddingTop: "0.75rem",
-            paddingBottom: "0.75rem",
-            borderBottomColor: "#1e1e24",
-            duration: 0.3,
-            ease: "power2.out",
-          });
-        } else {
-          gsap.to(headerRef.current, {
-            backgroundColor: "transparent",
-            paddingTop: "1.25rem",
-            paddingBottom: "1.25rem",
-            borderBottomColor: "transparent",
-            duration: 0.3,
-            ease: "power2.out",
-          });
-        }
-      }
-
-      lastScrollY = currentScrollY;
-    };
+    // Run once on mount so a restored scroll position renders the correct
+    // state instead of a transparent bar floating over the page body.
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -91,8 +64,12 @@ export function Header() {
     <header
       ref={headerRef}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all border-b border-transparent py-5 backdrop-blur-md",
-        isScrolled && "shadow-2xl shadow-black/90"
+        // Driven by class, not by GSAP inline styles: the bar has to stay
+        // legible over page content even if the animation layer never loads.
+        "fixed top-0 left-0 right-0 z-50 border-b transition-[background-color,padding,border-color,box-shadow] duration-300 ease-out backdrop-blur-xl",
+        isScrolled
+          ? "bg-bg/85 border-border py-3 shadow-2xl shadow-black/90"
+          : "bg-transparent border-transparent py-5"
       )}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">

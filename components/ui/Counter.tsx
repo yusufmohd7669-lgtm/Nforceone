@@ -51,7 +51,10 @@ export function Counter({
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 85%",
+          // Fire as the card crosses into view. The from-state below resets the
+          // columns to zero, so a later start would visibly blank a number the
+          // reader is already looking at.
+          start: "top bottom-=40px",
           toggleActions: "play none none reverse",
         },
       });
@@ -80,6 +83,10 @@ export function Counter({
             yPercent: targetYPercent,
             duration: 1.1 + index * 0.1,
             ease: "power3.out",
+            // The markup already renders the real figure. Without this, GSAP
+            // would stamp the zero state at mount and anyone arriving before
+            // the roll fires would read "00" or "000%".
+            immediateRender: false,
           },
           index === 0 ? "-=0.1" : "<0.06"
         );
@@ -94,6 +101,7 @@ export function Counter({
             scaleX: 1,
             duration: 1.2,
             ease: "power3.out",
+            immediateRender: false,
           },
           0.1
         );
@@ -143,11 +151,11 @@ export function Counter({
                   <div
                     className="digit-column-track flex flex-col will-change-transform"
                     data-target={char}
-                    style={
-                      prefersReduced
-                        ? { transform: `translateY(-${parseInt(char, 10) * 10}%)` }
-                        : undefined
-                    }
+                    // Render the real figure by default, in the markup itself.
+                    // GSAP rolls down from zero only once it actually runs.
+                    style={{
+                      transform: `translateY(-${parseInt(char, 10) * 10}%)`,
+                    }}
                   >
                     {DIGITS.map((d) => (
                       <span
@@ -182,7 +190,7 @@ export function Counter({
         <div
           ref={progressBarRef}
           className="bg-accent h-full origin-left will-change-transform"
-          style={prefersReduced ? { transform: "scaleX(1)" } : { transform: "scaleX(0)" }}
+          style={{ transform: "scaleX(1)" }}
         />
       </div>
     </div>

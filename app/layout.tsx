@@ -86,7 +86,8 @@ export default function RootLayout({
     "@type": "Organization",
     name: "NForce One",
     url: "https://nforce.one",
-    logo: "https://nforce.one/logo.png",
+    logo: "https://nforce.one/icon.svg",
+    image: "https://nforce.one/opengraph-image",
     slogan: "NF1 — Let's Do IT!",
     description:
       "Enterprise B2B IT consultancy specializing in Pega platform architecture, QA test engineering, big data infrastructure, and custom software.",

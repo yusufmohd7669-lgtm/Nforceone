@@ -1,78 +1,39 @@
-"use client";
+import React from "react";
 
-import React, { useRef } from "react";
-import { useGSAP } from "@gsap/react";
-import { gsap } from "@/lib/animations/gsap";
-import { usePrefersReducedMotion } from "@/lib/animations/hooks";
+/**
+ * The hero headline entrance is deliberately CSS-only.
+ *
+ * It used to be a GSAP timeline, which meant the H1 was stamped to
+ * `opacity: 0; yPercent: 120` at mount and only became readable once a
+ * requestAnimationFrame-driven tween completed. Any stall in that loop — a
+ * throttled background tab, a restored tab, a slow device, GSAP failing to
+ * load — left the single most important sentence on the site permanently
+ * invisible. CSS keyframes run on the compositor, cannot stall, need no
+ * JavaScript at all, and let this render as a server component.
+ */
+
+const LINES = ["Turn Complex IT Systems", "into Competitive"];
 
 export function HeroHeadline() {
-  const containerRef = useRef<HTMLHeadingElement>(null);
-  const advantagesRef = useRef<HTMLSpanElement>(null);
-  const prefersReduced = usePrefersReducedMotion();
-
-  useGSAP(
-    () => {
-      if (!containerRef.current || prefersReduced) return;
-
-      const lines = containerRef.current.querySelectorAll(".hero-line-inner");
-
-      const tl = gsap.timeline({ delay: 0.1 });
-
-      // 1. Signature expo.out line reveal from overflow:hidden
-      tl.fromTo(
-        lines,
-        {
-          yPercent: 120,
-          opacity: 0,
-        },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 1.1,
-          stagger: 0.12,
-          ease: "expo.out",
-        }
-      );
-
-      // 2. Signature 120ms HUD double-flicker on "Advantages."
-      if (advantagesRef.current) {
-        tl.to(
-          advantagesRef.current,
-          {
-            opacity: 0.3,
-            duration: 0.03,
-            repeat: 3,
-            yoyo: true,
-            ease: "none",
-          },
-          "+=0.02"
-        );
-      }
-    },
-    { scope: containerRef, dependencies: [prefersReduced] }
-  );
-
   return (
-    <h1
-      ref={containerRef}
-      className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold font-display tracking-tight text-white leading-[1.08] mb-6"
-    >
-      <span className="block overflow-hidden pb-1">
-        <span className="hero-line-inner block will-change-transform">
-          Turn Complex IT Systems
-        </span>
-      </span>
-      <span className="block overflow-hidden pb-1">
-        <span className="hero-line-inner block will-change-transform">
-          into Competitive
-        </span>
-      </span>
-      <span className="block overflow-hidden pb-1">
-        <span className="hero-line-inner block will-change-transform">
+    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold font-display tracking-tight text-white leading-[1.08] mb-6">
+      {LINES.map((line, i) => (
+        <span key={i} className="block overflow-hidden pb-1">
           <span
-            ref={advantagesRef}
-            className="text-transparent bg-clip-text bg-gradient-to-r from-white via-red-500 to-accent drop-shadow-[0_0_35px_rgba(229,9,20,0.5)]"
+            className="hero-line-inner block will-change-transform"
+            style={{ "--ln": i } as React.CSSProperties}
           >
+            {line}
+          </span>
+        </span>
+      ))}
+
+      <span className="block overflow-hidden pb-1">
+        <span
+          className="hero-line-inner block will-change-transform"
+          style={{ "--ln": LINES.length } as React.CSSProperties}
+        >
+          <span className="hero-flicker text-transparent bg-clip-text bg-gradient-to-r from-white via-red-500 to-accent drop-shadow-[0_0_35px_rgba(229,9,20,0.5)]">
             Advantages.
           </span>
         </span>

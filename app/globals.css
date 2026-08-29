@@ -190,3 +190,361 @@
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
 }
+
+/* ============================================================
+   NF1 LOGO — LIVE SPEED STREAKS
+   The nine trailing lines on the "1" read as motion, so they move.
+   Pure CSS: no rAF, no GSAP, survives JS failure, GPU-composited.
+   ============================================================ */
+
+.nf1-speedline {
+  /* fill-box lets each streak scale from its own left edge (the mark) */
+  transform-box: fill-box;
+  transform-origin: left center;
+  will-change: transform, opacity;
+  /* A smooth swell travelling down the fan. Every streak stays on screen for
+     the whole cycle - nothing fades out, nothing pops in - so the wordmark is
+     never caught mid-gap. ease-in-out keeps the turn at each end soft. */
+  animation: nf1SpeedWave 2.4s ease-in-out infinite;
+  /* 13 x -150ms spreads the crest across ~1.95s of a 2.4s cycle, so the wave
+     is always travelling and loops without a seam. */
+  animation-delay: calc(var(--sl) * -0.15s);
+}
+
+@keyframes nf1SpeedWave {
+  0%,
+  100% {
+    transform: translateX(0) scaleX(1);
+    opacity: 0.72;
+  }
+  50% {
+    transform: translateX(4px) scaleX(1.2);
+    opacity: 1;
+  }
+}
+
+/* Hover: the same wave, just quicker and wider */
+.nf1-logo:hover .nf1-speedline,
+.group:hover .nf1-logo .nf1-speedline {
+  animation-duration: 1.2s;
+}
+
+/* The "1" catches the light as the streaks fire */
+.nf1-mark-one {
+  transition: filter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nf1-logo:hover .nf1-mark-one,
+.group:hover .nf1-logo .nf1-mark-one {
+  filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.85));
+}
+
+/* ============================================================
+   PRELOADER — CSS-DRIVEN BOOT WIPE
+   Must never depend on rAF/GSAP: if the animation cannot run,
+   the overlay has to clear itself anyway. See Preloader.tsx.
+   ============================================================ */
+
+.nf1-preloader {
+  animation: nf1BootWipe 1.5s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+@keyframes nf1BootWipe {
+  0%,
+  55% {
+    clip-path: inset(0 0 0% 0);
+  }
+  100% {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+.nf1-preloader-text {
+  animation: nf1BootText 0.9s ease-out forwards;
+}
+
+@keyframes nf1BootText {
+  0% {
+    opacity: 0;
+  }
+  30%,
+  100% {
+    opacity: 1;
+  }
+}
+
+.nf1-preloader-scan {
+  animation: nf1BootScan 0.85s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes nf1BootScan {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    top: 100%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf1-speedline {
+    animation: none;
+    opacity: 0.9;
+  }
+  .nf1-logo:hover .nf1-speedline,
+  .group:hover .nf1-logo .nf1-speedline {
+    animation: none;
+  }
+  .nf1-preloader,
+  .nf1-preloader-text,
+  .nf1-preloader-scan {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   HERO HEADLINE — CSS-ONLY MASKED LINE REVEAL
+   Each line rides up out of its own overflow:hidden mask.
+   No JS: the H1 is readable even if the animation layer dies.
+   ============================================================ */
+
+.hero-line-inner {
+  animation: heroLineUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.1s + var(--ln) * 0.12s);
+}
+
+@keyframes heroLineUp {
+  from {
+    transform: translateY(120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* The signature HUD double-flicker, timed to land as the last line settles */
+.hero-flicker {
+  animation: heroFlicker 0.26s steps(1, end) 1.55s 1 both;
+}
+
+@keyframes heroFlicker {
+  0%,
+  25%,
+  50%,
+  75%,
+  100% {
+    opacity: 1;
+  }
+  12%,
+  37%,
+  62% {
+    opacity: 0.3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-line-inner,
+  .hero-flicker {
+    animation: none;
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* ============================================================
+   ARCHITECTURE DIAGRAM — STROKE DRAW-ON
+   Default (no data-phase / "static") is the FINISHED artwork.
+   "armed" applies the start state only once JS has confirmed the
+   diagram is still off-screen; "play" runs the draw. A dead JS
+   layer therefore yields a complete diagram, never a blank frame.
+   ============================================================ */
+
+.nf1-arch-band,
+.nf1-arch-link,
+.nf1-arch-spine {
+  stroke-dashoffset: 0;
+}
+
+.nf1-arch-label {
+  opacity: 1;
+}
+
+.nf1-arch-edge {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.nf1-arch-scan {
+  opacity: 0;
+}
+
+/* --- armed: hold the start state, off-screen only --- */
+
+.nf1-arch[data-phase="armed"] .nf1-arch-band,
+.nf1-arch[data-phase="armed"] .nf1-arch-link,
+.nf1-arch[data-phase="armed"] .nf1-arch-spine {
+  stroke-dashoffset: var(--len);
+}
+
+.nf1-arch[data-phase="armed"] .nf1-arch-label {
+  opacity: 0;
+}
+
+.nf1-arch[data-phase="armed"] .nf1-arch-edge {
+  transform: scaleY(0);
+}
+
+/* --- play: trace the architecture into existence --- */
+
+.nf1-arch[data-phase="play"] .nf1-arch-spine {
+  animation: archDraw 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.nf1-arch[data-phase="play"] .nf1-arch-band {
+  animation: archDraw 1.15s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.12s + var(--i) * 0.14s);
+}
+
+.nf1-arch[data-phase="play"] .nf1-arch-link {
+  animation: archDraw 0.4s ease-out both;
+  animation-delay: calc(0.72s + var(--i) * 0.14s);
+}
+
+.nf1-arch[data-phase="play"] .nf1-arch-edge {
+  animation: archEdge 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.34s + var(--i) * 0.14s);
+}
+
+.nf1-arch[data-phase="play"] .nf1-arch-label {
+  animation: archLabel 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(0.42s + var(--i) * 0.14s);
+}
+
+.nf1-arch[data-phase="play"] .nf1-arch-scan {
+  animation: archScan 1.5s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+@keyframes archDraw {
+  from {
+    stroke-dashoffset: var(--len);
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes archEdge {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes archLabel {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes archScan {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.85;
+  }
+  88% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(336px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf1-arch[data-phase="play"] .nf1-arch-band,
+  .nf1-arch[data-phase="play"] .nf1-arch-link,
+  .nf1-arch[data-phase="play"] .nf1-arch-spine,
+  .nf1-arch[data-phase="play"] .nf1-arch-edge,
+  .nf1-arch[data-phase="play"] .nf1-arch-label,
+  .nf1-arch[data-phase="play"] .nf1-arch-scan {
+    animation: none;
+  }
+}
+
+/* ============================================================
+   STREAK DIVIDER — the logo's trail, reused as a section break
+   ============================================================ */
+
+.nf1-divider-streak {
+  transform-origin: center;
+  animation: nf1DividerFlow 2s ease-in-out infinite;
+  /* Same negative stagger as the mark, so the two read as one system */
+  animation-delay: calc(var(--sl) * -0.16s);
+}
+
+@keyframes nf1DividerFlow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.45;
+  }
+  50% {
+    transform: scaleX(1.25);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf1-divider-streak {
+    animation: none;
+    opacity: 0.7;
+  }
+}
+
+/* ============================================================
+   ROUTE TRANSITION
+   No fill-mode on purpose: the wrapper holds no styles before the
+   animation starts or after it ends, so the page renders without
+   JS and leaves no transform behind to trap fixed-position pins.
+   ============================================================ */
+
+.nf1-route {
+  animation: nf1RouteIn 0.3s ease-out;
+}
+
+/* Opacity only - deliberately no transform.
+   This wrapper contains every page, and a transform on it (even
+   translateY(0)) makes it the containing block for position:fixed
+   descendants, which breaks every pinned ScrollTrigger below it and does so
+   invisibly: the pinned section detaches and leaves the pin-spacer padding
+   as a tall empty gap. A fade alone gives the same transition with none of
+   that. */
+@keyframes nf1RouteIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf1-route {
+    animation: none;
+  }
+}

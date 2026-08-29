@@ -9,13 +9,15 @@ import { Badge } from "@/components/ui/Badge";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Marquee } from "@/components/ui/Marquee";
 import { Counter } from "@/components/ui/Counter";
-import { ServicesTable } from "@/components/ui/ServicesTable";
+import { ServicesShowcase } from "@/components/ui/ServicesShowcase";
 import { CaseStudyCard } from "@/components/cards/CaseStudyCard";
 import { InsightCard } from "@/components/cards/InsightCard";
 import { HeroParallax } from "@/components/hero/HeroParallax";
 import { HeroHeadline } from "@/components/hero/HeroHeadline";
 import { ScanlineSweep } from "@/components/ui/ScanlineSweep";
 import { Reveal } from "@/components/ui/Reveal";
+import { ArchitectureDiagram } from "@/components/ui/ArchitectureDiagram";
+import { StreakDivider } from "@/components/ui/StreakDivider";
 import {
   Layers,
   ShieldCheck,
@@ -127,26 +129,22 @@ export default function HomePage() {
               value={14}
               suffix="+"
               label="Years Enterprise Mastery"
-              specCode="[EXP.14]"
             />
             <Counter
               value={90}
               suffix="+"
               label="Guardrail Score Standard"
-              specCode="[PGA.90]"
             />
             <Counter
               value={100}
               suffix="%"
               label="On-Time Sprint Delivery"
-              specCode="[DEL.100]"
             />
             <Counter
               value={99.99}
               suffix="%"
               decimals={2}
               label="Infrastructure Reliability"
-              specCode="[SLA.99.99]"
             />
           </div>
         </div>
@@ -214,9 +212,6 @@ export default function HomePage() {
                       {pillar.description}
                     </p>
                   </div>
-                  <div className="mt-5 pt-3 border-t border-border/60 text-[10px] font-mono uppercase text-accent font-semibold">
-                    Standard Directive 0{idx + 1}
-                  </div>
                 </div>
               ))}
             </div>
@@ -232,7 +227,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <Reveal y={22}>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-              <div className="lg:col-span-8 space-y-5">
+              <div className="lg:col-span-6 space-y-5">
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="accent">FLAGSHIP SPECIALIZATION</Badge>
                   {/* Folded Quality Fact directly as a prominent badge */}
@@ -263,36 +258,35 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div className="lg:col-span-4 p-6 rounded-xl bg-bg border border-border space-y-3 border-l-4 border-l-accent shadow-2xl relative group">
+              <div className="lg:col-span-6 p-6 rounded-xl bg-bg border border-border shadow-2xl relative group">
+                <span className="hud-corner-tl" />
                 <span className="hud-corner-tr" />
+                <span className="hud-corner-bl" />
                 <span className="hud-corner-br" />
-                <span className="text-[11px] font-mono uppercase text-accent font-bold block">
-                  [SYS.ARCH.PEGA]
-                </span>
-                <h3 className="text-base font-bold font-display text-white">
-                  Zero Technical Debt Architecture
-                </h3>
-                <ul className="space-y-2 text-xs font-mono text-text-muted">
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    <span>Situational Layer Cake Enforcement</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    <span>Deployment Manager CI/CD Quality Gates</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                    <span>Zero-Downtime Pega Cloud Cutover</span>
-                  </li>
-                </ul>
+
+                <div className="flex items-center justify-between mb-5">
+                  <span className="text-[11px] font-mono uppercase text-accent font-bold">
+                    [SYS.ARCH.PEGA]
+                  </span>
+                  <span className="text-[11px] font-mono uppercase text-text-muted/70">
+                    Situational Layer Cake
+                  </span>
+                </div>
+
+                <ArchitectureDiagram />
+
+                <p className="mt-5 pt-4 border-t border-border text-xs font-mono text-text-muted leading-relaxed">
+                  Local rule sets stay in the upper layers. Reusable enterprise assets
+                  stay at the base. That separation is what keeps an implementation
+                  upgrade-ready.
+                </p>
               </div>
             </div>
           </Reveal>
         </div>
       </section>
 
-      {/* 5. ALL 12 SERVICES (SCANNABLE INDEXED TABLE) */}
+      {/* 5. ALL 12 SERVICES — pinned horizontal rail on desktop, indexed table on mobile */}
       <section className="py-20 md:py-24 border-b border-border bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
@@ -306,12 +300,9 @@ export default function HomePage() {
               Full Directory View
             </Button>
           </div>
-
-          {/* Scannable Indexed Technical Table with Reveal */}
-          <Reveal y={20}>
-            <ServicesTable />
-          </Reveal>
         </div>
+
+        <ServicesShowcase />
       </section>
 
       {/* 6. CASE STUDIES HIGHLIGHTS */}
@@ -339,6 +330,10 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <StreakDivider className="py-14" />
+      </div>
       {/* 7. INDUSTRIES SERVED */}
       <section className="py-20 md:py-24 border-b border-border bg-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -410,6 +405,10 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <StreakDivider className="py-14" />
+      </div>
       {/* 9. GLOBAL CTA BANNER (Signature Scanline Sweep 3 of 3) */}
       <section className="py-20 md:py-24 bg-gradient-to-b from-bg to-bg-raised relative overflow-hidden">
         {/* Signature Scanline Sweep (3 of 3) */}
@@ -423,7 +422,7 @@ export default function HomePage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <Reveal y={22}>
             <Badge variant="accent" className="mx-auto mb-6">
-              [SYS.INIT] LET&apos;S COLLABORATE
+              LET&apos;S COLLABORATE
             </Badge>
             <h2 className="text-3xl md:text-5xl font-extrabold font-display tracking-tight text-white leading-tight mb-5">
               Ready to Build Next-Generation Enterprise Systems?

@@ -41,12 +41,34 @@ export function useRevealAnimation(
     () => {
       if (!containerRef.current || prefersReduced) return;
 
-      const target = options?.selector
-        ? containerRef.current.querySelectorAll(options.selector)
-        : containerRef.current.children;
+      let target: Element[];
 
-      if (!target || target.length === 0) return;
+      if (options?.selector) {
+        target = Array.from(containerRef.current.querySelectorAll(options.selector));
+      } else {
+        const direct = Array.from(containerRef.current.children);
+        // <Reveal> almost always wraps a single grid/flex container. Staggering
+        // that lone wrapper animates every card as one block, silently killing
+        // the stagger, so descend to the items that were actually meant to move.
+        target =
+          direct.length === 1 && direct[0].children.length > 1
+            ? Array.from(direct[0].children)
+            : direct;
+      }
 
+      if (target.length === 0) return;
+
+      // immediateRender:false is load-bearing, not a tweak.
+      //
+      // By default a fromTo stamps its start values the instant the tween is
+      // built, so every card on the page would sit at opacity:0 from mount and
+      // only ScrollTrigger could bring it back. ScrollTrigger runs on
+      // requestAnimationFrame, so any stall in that loop leaves whole sections
+      // permanently invisible rather than merely un-animated.
+      //
+      // Deferring the start values inverts the failure mode: the markup stays
+      // visible on its own, and the animation is purely additive. If the
+      // animation layer never runs, the reader still gets the whole page.
       gsap.fromTo(
         target,
         {
@@ -60,9 +82,13 @@ export function useRevealAnimation(
           stagger: options?.stagger ?? 0.08,
           delay: options?.delay ?? 0,
           ease: "power3.out",
+          immediateRender: false,
           scrollTrigger: {
             trigger: containerRef.current,
-            start: options?.start ?? "top 85%",
+            // Fire as the section crosses into view. Because the start values
+            // now land at trigger time, a later start would visibly blank
+            // content the reader is already looking at.
+            start: options?.start ?? "top bottom-=40px",
             toggleActions: "play none none reverse",
           },
         }
