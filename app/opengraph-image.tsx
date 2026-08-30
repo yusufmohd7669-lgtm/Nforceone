@@ -1,10 +1,11 @@
 import { ImageResponse } from "next/og";
 import {
   LOGO_VIEWBOX,
-  LETTER_N,
-  LETTER_F,
-  NUMERAL_ONE,
-  SPEEDLINES,
+  N_POLYGON,
+  F_TOP_BAR,
+  F_MID_BAR,
+  ONE_PATH_FIXED,
+  SPEED_POLYGONS_FIXED,
 } from "@/lib/logoGeometry";
 
 export const alt =
@@ -13,32 +14,37 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 /**
- * The NF1 wordmark, built from the shared geometry and inlined as a data URI
+ * The NF1 official fixed brand mark, built from the shared geometry and inlined as a data URI
  * because Satori renders <img> but not arbitrary inline SVG children.
  */
 const MARK = [
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${LOGO_VIEWBOX}" width="212" height="56">`,
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${LOGO_VIEWBOX}" width="950" height="550">`,
   "<defs>",
-  '<linearGradient id="w" x1="0" y1="0" x2="80" y2="52" gradientUnits="userSpaceOnUse">',
-  '<stop offset="0%" stop-color="#FFFFFF"/><stop offset="55%" stop-color="#F2F2F4"/><stop offset="100%" stop-color="#C9CBD2"/>',
-  "</linearGradient>",
-  '<linearGradient id="r" x1="116" y1="0" x2="152" y2="52" gradientUnits="userSpaceOnUse">',
-  '<stop offset="0%" stop-color="#FF2A33"/><stop offset="45%" stop-color="#E50914"/><stop offset="100%" stop-color="#8A0005"/>',
-  "</linearGradient>",
-  '<linearGradient id="s" x1="138" y1="0" x2="210" y2="0" gradientUnits="userSpaceOnUse">',
-  '<stop offset="0%" stop-color="#FF3A42"/><stop offset="30%" stop-color="#E50914"/><stop offset="100%" stop-color="#E50914" stop-opacity="0"/>',
+  '<linearGradient id="redGradient" x1="0%" y1="0%" x2="0%" y2="100%">',
+  '<stop offset="0%" stop-color="#E10600"/>',
+  '<stop offset="60%" stop-color="#800000"/>',
+  '<stop offset="100%" stop-color="#220000"/>',
   "</linearGradient>",
   "</defs>",
-  '<g fill="url(#s)">',
-  ...SPEEDLINES.map((d) => `<path d="${d}"/>`),
+  `<polygon points="${N_POLYGON}" fill="#FFFFFF"/>`,
+  `<polygon points="${F_TOP_BAR}" fill="#FFFFFF"/>`,
+  `<polygon points="${F_MID_BAR}" fill="#FFFFFF"/>`,
+  `<path d="${ONE_PATH_FIXED}" fill="url(#redGradient)"/>`,
+  '<g fill="url(#redGradient)">',
+  ...SPEED_POLYGONS_FIXED.map((pts) => `<polygon points="${pts}"/>`),
   "</g>",
-  `<path d="${LETTER_N}" fill="url(#w)"/>`,
-  `<path d="${LETTER_F}" fill="url(#w)"/>`,
-  `<path d="${NUMERAL_ONE}" fill="url(#r)"/>`,
+  '<g font-family="sans-serif" font-weight="900" font-size="62" letter-spacing="2">',
+  '<text x="140" y="475" fill="#FFFFFF">Let\'s Do</text>',
+  '<text x="610" y="475" fill="#E10600">IT!</text>',
+  "</g>",
   "</svg>",
 ].join("");
 
 const markSrc = `data:image/svg+xml;utf8,${encodeURIComponent(MARK)}`;
+
+
+
+
 
 export default function OpengraphImage() {
   return new ImageResponse(

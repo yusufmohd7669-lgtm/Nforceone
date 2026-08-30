@@ -1,58 +1,42 @@
 /**
- * Single source of truth for the NF1 wordmark geometry.
- *
- * The header logo, the favicon and the Open Graph card all draw the same mark.
- * Keeping the path data here means a change to the letterforms cannot leave one
- * surface showing an older version of the brand — which is exactly what
- * happened while these were maintained as separate copies.
- *
- * Every letterform shares one slant so the wordmark reads as a single object.
+ * Single source of truth for the NF1 official fixed vector logo geometry.
  */
 
-export const LOGO_VIEWBOX = "0 0 212 56";
+export const LOGO_VIEWBOX = "0 0 950 550";
 
-/** Horizontal shift per unit of height (~13 degrees of italic). */
-export const SLANT = 0.227;
-export const CAP_TOP = 6;
+/** Main 'N' polygon */
+export const N_POLYGON =
+  "90,380 180,80 285,80 375,290 415,80 500,80 435,380 295,380 235,210 165,380";
 
-/** x on a slanted edge at height y, given its x at CAP_TOP. */
-export const at = (xTop: number, y: number) => xTop - (y - CAP_TOP) * SLANT;
+/** 'F' Top Horizontal Bar polygon */
+export const F_TOP_BAR = "415,80 770,80 740,165 470,165";
 
-/** "N": left stem, diagonal, right stem. Counters kept open so it reads as N. */
-export const LETTER_N = [
-  "M4 50L17 50L27 6L14 6Z",
-  "M14 6L26 6L51 50L39 50Z",
-  "M38 50L51 50L61 6L48 6Z",
-].join(" ");
+/** 'F' Middle Horizontal Bar polygon */
+export const F_MID_BAR = "450,225 610,225 585,290 430,290";
 
-/** "F": stem, top arm, mid arm. */
-export const LETTER_F = [
-  "M66 50L79 50L89 6L76 6Z",
-  `M76 6L114 6L${at(114, 17)} 17L${at(76, 17)} 17Z`,
-  `M${at(76, 25)} 25L103 25L${at(103, 35)} 35L${at(76, 35)} 35Z`,
-].join(" ");
+/** Red '1' numeral path */
+export const ONE_PATH_FIXED =
+  "M 770 80 L 740 165 L 630 165 L 610 225 L 650 225 L 625 290 L 560 290 L 535 380 L 800 380 L 830 290 L 720 290 L 770 80 Z";
 
-/** "1": a heavy slab with a small angled flag, matching the artwork. */
-export const NUMERAL_ONE = "M130 6L148 6L138 50L120 50L126.6 21L114 25L117 14Z";
+/** Speed line polygon extrusions trailing the '1' */
+export const SPEED_POLYGONS_FIXED = [
+  "770,80 930,80 930,88",
+  "765,100 930,100 930,108",
+  "760,120 930,120 930,128",
+  "755,140 930,140 930,148",
+  "740,165 930,165 930,173",
+  "735,185 930,185 930,193",
+  "730,205 930,205 930,213",
+  "625,225 930,225 930,233",
+  "620,245 930,245 930,253",
+  "615,265 930,265 930,273",
+  "830,290 930,290 930,298",
+  "825,310 930,310 930,318",
+  "820,330 930,330 930,338",
+  "815,350 930,350 930,358",
+  "800,380 930,380 930,388",
+];
 
-/**
- * Thirteen thin streaks trailing the "1".
- *
- * Both ends ride the same slant as the letterforms, so the fan reads as one
- * parallelogram raking off the mark rather than a stack of loose bars. Only
- * the last few taper, which is what gives the trail its cut-off edge.
- */
-export const STREAK_COUNT = 13;
 
-export const SPEEDLINES = Array.from({ length: STREAK_COUNT }, (_, i) => {
-  const y = 9 + i * 2.9;
-  const h = 1.9;
-  const taper = Math.max(0, i - 9) * 11;
-  const xs = at(149, y);
-  const xe = at(207 - taper, y);
-  return `M${xs.toFixed(1)} ${y.toFixed(1)}L${xe.toFixed(1)} ${y.toFixed(1)}L${(
-    xe - h * SLANT
-  ).toFixed(1)} ${(y + h).toFixed(1)}L${(xs - h * SLANT).toFixed(1)} ${(
-    y + h
-  ).toFixed(1)}Z`;
-});
+
+

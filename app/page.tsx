@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import { services } from "@/content/services";
 import { caseStudies } from "@/content/caseStudies";
-import { insights } from "@/content/insights";
 import { industries } from "@/content/industries";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -11,13 +10,15 @@ import { Marquee } from "@/components/ui/Marquee";
 import { Counter } from "@/components/ui/Counter";
 import { ServicesShowcase } from "@/components/ui/ServicesShowcase";
 import { CaseStudyCard } from "@/components/cards/CaseStudyCard";
-import { InsightCard } from "@/components/cards/InsightCard";
+
 import { HeroParallax } from "@/components/hero/HeroParallax";
 import { HeroHeadline } from "@/components/hero/HeroHeadline";
 import { ScanlineSweep } from "@/components/ui/ScanlineSweep";
 import { Reveal } from "@/components/ui/Reveal";
 import { ArchitectureDiagram } from "@/components/ui/ArchitectureDiagram";
 import { StreakDivider } from "@/components/ui/StreakDivider";
+import { HudCard } from "@/components/ui/HudCard";
+
 import {
   Layers,
   ShieldCheck,
@@ -186,36 +187,38 @@ export default function HomePage() {
           <Reveal stagger={0.08} y={22}>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {valuePillars.map((pillar, idx) => (
-                <div
+                <HudCard
                   key={idx}
-                  className="relative p-6 md:p-7 rounded-xl bg-bg-card border border-border hover:border-accent transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1 shadow-lg hover:shadow-black/60"
+                  code={pillar.code}
+                  className="min-h-[260px]"
                 >
-                  {/* HUD Corner Reticle Brackets (Signature Moment #5) */}
-                  <span className="hud-corner-tl" />
-                  <span className="hud-corner-tr" />
-                  <span className="hud-corner-bl" />
-                  <span className="hud-corner-br" />
-
-                  <div>
-                    <div className="flex items-center justify-between mb-5">
-                      <div className="w-10 h-10 rounded-lg bg-bg-raised border border-border flex items-center justify-center text-accent group-hover:border-accent/40 transition-colors">
-                        <pillar.icon className="w-5 h-5" />
-                      </div>
-                      <span className="font-mono text-[10px] text-text-muted/60 group-hover:text-accent font-semibold">
+                  {/* Top Bar: Icon + Monospace Code Badge */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div className="w-11 h-11 rounded-lg bg-bg-raised/90 border border-border flex items-center justify-center text-accent group-hover:text-white group-hover:bg-accent group-hover:border-accent group-hover:shadow-[0_0_15px_rgba(229,9,20,0.7)] group-hover:scale-105 transition-all duration-300">
+                      <pillar.icon className="w-5 h-5 transition-transform duration-300 group-hover:rotate-6" />
+                    </div>
+                    <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-bg-raised/70 border border-border/80 group-hover:border-accent/50 transition-colors">
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                      <span className="font-mono text-[10px] text-text-muted group-hover:text-white font-bold tracking-wider">
                         {pillar.code}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold font-display text-white mb-2.5">
+                  </div>
+
+                  {/* Body Content */}
+                  <div>
+                    <h3 className="text-lg font-bold font-display text-white mb-2.5 group-hover:text-accent transition-colors duration-200">
                       {pillar.title}
                     </h3>
-                    <p className="text-xs md:text-sm text-text-muted leading-relaxed">
+                    <p className="text-xs md:text-sm text-text-muted leading-relaxed group-hover:text-text-muted/90">
                       {pillar.description}
                     </p>
                   </div>
-                </div>
+                </HudCard>
               ))}
             </div>
           </Reveal>
+
         </div>
       </section>
 
@@ -380,37 +383,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. LATEST INSIGHTS */}
-      <section className="py-20 md:py-24 border-b border-border bg-bg-raised/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-            <SectionHeader
-              eyebrow="TECHNICAL INSIGHTS"
-              title="Engineering Notes & Architecture Blueprints"
-              subtitle="Practical articles authored by our principal architects on enterprise modernization."
-              className="mb-0 max-w-2xl"
-            />
-            <Button href="/insights" variant="outline" size="sm" icon magnetic>
-              All Articles
-            </Button>
-          </div>
-
-          <Reveal stagger={0.08} y={22}>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {insights.slice(0, 3).map((insight) => (
-                <InsightCard key={insight.slug} insight={insight} />
-              ))}
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <StreakDivider className="py-14" />
       </div>
-      {/* 9. GLOBAL CTA BANNER (Signature Scanline Sweep 3 of 3) */}
+
+      {/* 8. GLOBAL CTA BANNER (Signature Scanline Sweep 3 of 3) */}
       <section className="py-20 md:py-24 bg-gradient-to-b from-bg to-bg-raised relative overflow-hidden">
+
         {/* Signature Scanline Sweep (3 of 3) */}
         <ScanlineSweep />
 

@@ -2,10 +2,11 @@ import React from "react";
 import { cn } from "@/lib/utils";
 import {
   LOGO_VIEWBOX,
-  LETTER_N,
-  LETTER_F,
-  NUMERAL_ONE,
-  SPEEDLINES,
+  N_POLYGON,
+  F_TOP_BAR,
+  F_MID_BAR,
+  ONE_PATH_FIXED,
+  SPEED_POLYGONS_FIXED,
 } from "@/lib/logoGeometry";
 
 interface LogoProps {
@@ -15,85 +16,77 @@ interface LogoProps {
 }
 
 export function Logo({ className, size = "md", hideTagline = false }: LogoProps) {
-  const sizes = {
-    sm: { height: 26, subtext: "text-[9px]" },
-    md: { height: 34, subtext: "text-[11px]" },
-    lg: { height: 46, subtext: "text-[13px]" },
+  const heights = {
+    sm: hideTagline ? 24 : 32,
+    md: hideTagline ? 32 : 44,
+    lg: hideTagline ? 44 : 58,
   };
 
+  const viewBox = hideTagline ? "70 60 880 340" : LOGO_VIEWBOX;
+
   return (
-    <div className={cn("nf1-logo inline-flex flex-col items-start select-none", className)}>
+    <div className={cn("nf1-logo inline-flex items-center select-none", className)}>
       <svg
-        height={sizes[size].height}
-        viewBox={LOGO_VIEWBOX}
+        height={heights[size]}
+        viewBox={viewBox}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="overflow-visible"
+        className="w-auto overflow-visible"
         role="img"
         aria-label="NForce One"
       >
         <defs>
-          <linearGradient id="nf1White" x1="0" y1="0" x2="80" y2="52" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FFFFFF" />
-            <stop offset="55%" stopColor="#F2F2F4" />
-            <stop offset="100%" stopColor="#C9CBD2" />
+          {/* Red Gradient */}
+          <linearGradient id="nf1RedGradFixed" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#E10600" />
+            <stop offset="60%" stopColor="#800000" />
+            <stop offset="100%" stopColor="#220000" />
           </linearGradient>
 
-          <linearGradient id="nf1Red" x1="116" y1="0" x2="152" y2="52" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FF2A33" />
-            <stop offset="45%" stopColor="#E50914" />
-            <stop offset="100%" stopColor="#8A0005" />
-          </linearGradient>
-
-          {/* Streaks burn hot at the mark and dissolve into the slipstream */}
-          <linearGradient id="nf1Streak" x1="138" y1="0" x2="210" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stopColor="#FF3A42" />
-            <stop offset="30%" stopColor="#E50914" />
-            <stop offset="100%" stopColor="#E50914" stopOpacity="0" />
-          </linearGradient>
-
-          <filter id="nf1Depth" x="-15%" y="-15%" width="130%" height="130%">
-            <feDropShadow dx="0" dy="1.5" stdDeviation="1.5" floodColor="#000000" floodOpacity="0.85" />
+          {/* Drop Shadow */}
+          <filter id="nf1ShadowFixed" x="-10%" y="-10%" width="130%" height="130%">
+            <feDropShadow dx="-6" dy="8" stdDeviation="6" floodColor="#000000" floodOpacity="0.9" />
           </filter>
         </defs>
 
-        {/* Speed streaks */}
-        <g fill="url(#nf1Streak)">
-          {SPEEDLINES.map((d, i) => (
-            <path
-              key={i}
-              d={d}
-              className="nf1-speedline"
-              style={{ "--sl": i } as React.CSSProperties}
-            />
-          ))}
+        <g filter="url(#nf1ShadowFixed)">
+          {/* White Shapes: 'N' + Top/Middle Bars of 'F' */}
+          <polygon points={N_POLYGON} fill="#FFFFFF" />
+          <polygon points={F_TOP_BAR} fill="#FFFFFF" />
+          <polygon points={F_MID_BAR} fill="#FFFFFF" />
+
+          {/* Red Shapes: '1' extending into speed trails */}
+          <path d={ONE_PATH_FIXED} fill="url(#nf1RedGradFixed)" />
+
+          {/* Speed Lines */}
+          <g fill="url(#nf1RedGradFixed)">
+            {SPEED_POLYGONS_FIXED.map((pts, i) => (
+              <polygon key={i} points={pts} />
+            ))}
+          </g>
         </g>
 
-        <path d={LETTER_N} fill="url(#nf1White)" filter="url(#nf1Depth)" />
-        <path d={LETTER_F} fill="url(#nf1White)" filter="url(#nf1Depth)" />
-        <path
-          className="nf1-mark-one"
-          d={NUMERAL_ONE}
-          fill="url(#nf1Red)"
-          filter="url(#nf1Depth)"
-        />
-      </svg>
-
-      {!hideTagline && (
-        <div className="flex items-center gap-1 font-mono tracking-widest uppercase font-bold text-white mt-1 pl-1">
-          <span className={cn(sizes[size].subtext, "text-white tracking-widest")}>
-            Let&apos;s Do
-          </span>
-          <span
-            className={cn(
-              sizes[size].subtext,
-              "text-accent font-black tracking-widest drop-shadow-[0_0_8px_rgba(229,9,20,0.8)]"
-            )}
+        {/* Tagline */}
+        {!hideTagline && (
+          <g
+            fontFamily="'Arial Black', 'Arial', sans-serif"
+            fontWeight="900"
+            fontSize="62"
+            letterSpacing="2"
           >
-            IT!
-          </span>
-        </div>
-      )}
+            <text x="140" y="475" fill="#FFFFFF">
+              Let&apos;s Do
+            </text>
+            <text x="610" y="475" fill="#E10600">
+              IT!
+            </text>
+          </g>
+        )}
+      </svg>
     </div>
   );
 }
+
+
+
+
